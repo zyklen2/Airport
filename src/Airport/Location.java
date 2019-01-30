@@ -8,6 +8,9 @@ public class Location {
     private Aircraft currentAircraft =null;
     private Gate theGate=null;
 
+    protected Location(){
+    }
+
     public Location(String locationID, String[] connectedLocations) {
         this.locationID = locationID;
         this.connectedLocations = connectedLocations;
@@ -33,10 +36,7 @@ public class Location {
         }
     }
 
-    public void addGate(Gate theGate){
-        this.theGate=theGate;
+    public String[] getConnectedLocations(){
+        return connectedLocations;
     }
-
-
-
 }

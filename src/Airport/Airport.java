@@ -7,6 +7,8 @@ public class Airport {
     private ArrayList<Aircraft> theAircrafts =new ArrayList<Aircraft>();
     private ArrayList<Location> theCheckpoints=new ArrayList<Location>();
     private ArrayList<Location> theCrossroads=new ArrayList<Location>();
+    private ArrayList<Location> theRunwayConnectors=new ArrayList<Location>();
+    private ArrayList<Location> theGateLocations=new ArrayList<Location>();
     AirportOperationsDatabase theAirportOperationsDatabase =new AirportOperationsDatabase();
     private Tower theTower=new Tower(theAirportOperationsDatabase);
     private ApronControl theApronControl=new ApronControl(theAirportOperationsDatabase);
@@ -106,7 +108,34 @@ public class Airport {
         theCrossroads.add(new Location("X15",connectedLocations));
         connectedLocations=new String[]{"M5","N6"};
         theCrossroads.add(new Location("X16",connectedLocations));
-
+        connectedLocations=new String[]{"O1","N1"};
+        theRunwayConnectors.add(new Location("S1",connectedLocations));
+        connectedLocations=new String[]{"M1","L1"};
+        theRunwayConnectors.add(new Location("S2",connectedLocations));
+        connectedLocations=new String[]{"O6","N6"};
+        theRunwayConnectors.add(new Location("S3",connectedLocations));
+        connectedLocations=new String[]{"M6","L6"};
+        theRunwayConnectors.add(new Location("S4",connectedLocations));
+        connectedLocations=new String[]{"N1","N2"};
+        theGateLocations.add(new GateLocation(GateID.A01,connectedLocations));
+        connectedLocations=new String[]{"N2","N3"};
+        theGateLocations.add(new GateLocation(GateID.A02,connectedLocations));
+        connectedLocations=new String[]{"N3","N4"};
+        theGateLocations.add(new GateLocation(GateID.A03,connectedLocations));
+        connectedLocations=new String[]{"N4","N5"};
+        theGateLocations.add(new GateLocation(GateID.A04,connectedLocations));
+        connectedLocations=new String[]{"N5","N6"};
+        theGateLocations.add(new GateLocation(GateID.A05,connectedLocations));
+        connectedLocations=new String[]{"M1","M2"};
+        theGateLocations.add(new GateLocation(GateID.B01,connectedLocations));
+        connectedLocations=new String[]{"M2","M3"};
+        theGateLocations.add(new GateLocation(GateID.B02,connectedLocations));
+        connectedLocations=new String[]{"M3","M4"};
+        theGateLocations.add(new GateLocation(GateID.B03,connectedLocations));
+        connectedLocations=new String[]{"M4","M5"};
+        theGateLocations.add(new GateLocation(GateID.B04,connectedLocations));
+        connectedLocations=new String[]{"M5","M6"};
+        theGateLocations.add(new GateLocation(GateID.B05,connectedLocations));
     }
 
     public void landAndStart(Aircraft aircraftToLand,Aircraft aircraftToStart,String landingRunway,String startRunway,String landingRunwayConnector,String startRunwayConnector,String exactLandPoint,String exactStartpoint,String destinationGateID){
