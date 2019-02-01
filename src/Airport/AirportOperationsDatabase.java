@@ -16,9 +16,17 @@ public class AirportOperationsDatabase {
     public ArrayList<String> getDataOfAirplane(String aircraftID){
         ArrayList<String> theData=new ArrayList<String>();
         for(int i=0;i<theDatabase.size();i++){
-            if(theDatabase.get(i).getAircraftID()==aircraftID){
+            if(theDatabase.get(i).getAircraftID().toString()==aircraftID){
                 theData.add(theDatabase.get(i).getDataInformation());
             }
+        }
+        return theData;
+    }
+
+    public ArrayList<String> getAllData(){
+        ArrayList<String> theData=new ArrayList<String>();
+        for(int i=0;i<theDatabase.size();i++){
+            theData.add(theDatabase.get(i).getDataInformation());
         }
         return theData;
     }

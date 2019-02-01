@@ -7,7 +7,7 @@ public class GateLocation extends Location {
         this.locationID = locationID;
         this.connectedLocations = connectedLocations;
     }
-    public GateID getLocationID(){
-        return locationID;
+    public String getLocationID(){
+        return locationID.toString();
     }
 }

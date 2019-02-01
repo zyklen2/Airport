@@ -1,15 +1,28 @@
 package Airport;
 
-import Aircraft.Aircraft;
+import Aircraft.*;
 
 public class EventRunwayClearedForTakeOff {
     Aircraft aircraft;
     String runway;
-    int EventID;
+    int eventID;
 
     public EventRunwayClearedForTakeOff(Aircraft aircraft, String runway, int eventID) {
         this.aircraft = aircraft;
         this.runway = runway;
-        EventID = eventID;
+        this.eventID = eventID;
+    }
+
+    public AircraftID getAircraft() {
+        return aircraft.getId();
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{EventRunwayClearedForTakeOff : ");
+        stringBuilder.append(" eventID = ").append(eventID);
+        stringBuilder.append(" aircraft = ").append(aircraft.getId());
+        stringBuilder.append(" runway = ").append(runway).append("} ");
+        return stringBuilder.toString();
     }
 }

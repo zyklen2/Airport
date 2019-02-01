@@ -7,33 +7,43 @@ import java.util.ArrayList;
 
 public class Tower {
     private EventBus eventBus;
-    private int eventID;
+    private EventID eventID;
     private AirportOperationsDatabase theDatabase;
-    public Tower(AirportOperationsDatabase theDatabase) {
+    public Tower(AirportOperationsDatabase theDatabase,EventID theEventID) {
         this.eventBus = new EventBus();
-        eventID=0;
+        eventID=theEventID;
         this.theDatabase=theDatabase;
     }
 
     public void eventRunwayClearedToLand(Aircraft aircraft, String runway) {
-        eventBus.post(new EventRunwayClearedToLand(aircraft,runway,eventID++));
-        theDatabase.addData(aircraft.getId(),"eventRunwayClearedToLand");
+        EventRunwayClearedToLand event=new EventRunwayClearedToLand(aircraft,runway,eventID.getEventID());
+        eventBus.post(event);
+        theDatabase.addData(aircraft.getId(),event.toString());
     }
 
     public void eventTaxi(Aircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination) {
-        eventBus.post(new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,exactDestination,eventID++));
-        theDatabase.addData(aircraft.getId(),"eventTaxi");
+        EventTaxi event=new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,exactDestination,eventID.getEventID());
+        eventBus.post(event);
+        theDatabase.addData(aircraft.getId(),event.toString());
+    }
+
+    public void eventTaxi(Aircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination) {
+        EventTaxi event = new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,eventID.getEventID());
+        eventBus.post(event);
+        theDatabase.addData(aircraft.getId(),event.toString());
     }
 
     public void eventRunwayClearedForTakeOff(Aircraft aircraft, String runway){
-        eventBus.post(new EventRunwayClearedToLand(aircraft,runway,eventID++));
-        theDatabase.addData(aircraft.getId(),"eventRunwayClearedForTakeOff");
+        EventRunwayClearedForTakeOff event=new EventRunwayClearedForTakeOff(aircraft,runway,eventID.getEventID());
+        eventBus.post(event);
+        theDatabase.addData(aircraft.getId(),event.toString());
     }
 
     public void eventHoldShort(Aircraft aircraft, String runwayEntrance){
         CommunicationFrequencys frequency = CommunicationFrequencys.Tower;
-        eventBus.post(new EventHoldShort(aircraft,runwayEntrance,frequency,eventID++));
-        theDatabase.addData(aircraft.getId(),"eventHoldShort");
+        EventHoldShort event=new EventHoldShort(aircraft,runwayEntrance,frequency,eventID.getEventID());
+        eventBus.post(event);
+        theDatabase.addData(aircraft.getId(),event.toString());
     }
 
     public void addAirplane(Subscriber subscriber) {

@@ -3,6 +3,7 @@ package Airport;
 import Aircraft.AircraftID;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class AirportOperationsDatabaseData {
     private AircraftID aircraftID;
@@ -19,6 +20,6 @@ public class AirportOperationsDatabaseData {
     }
 
     public String getDataInformation(){
-        return "#"+aircraftID+","+timeStemp+","+eventMessage;
+        return "(#Aircraft: "+aircraftID+", Time: "+timeStemp.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))+", Message: "+eventMessage+")";
     }
 }

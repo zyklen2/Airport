@@ -1,6 +1,6 @@
 package Airport;
 
-import Aircraft.Aircraft;
+import Aircraft.*;
 
 public class EventRunwayClearedToLand {
     Aircraft aircraft;
@@ -11,5 +11,18 @@ public class EventRunwayClearedToLand {
         this.aircraft = aircraft;
         this.runway = runway;
         this.eventID = eventID;
+    }
+
+    public AircraftID getAircraft() {
+        return aircraft.getId();
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{EventRunwayClearedToLand : ");
+        stringBuilder.append(" eventID = ").append(eventID);
+        stringBuilder.append(" aircraft = ").append(aircraft.getId());
+        stringBuilder.append(" runway = ").append(runway).append("} ");
+        return stringBuilder.toString();
     }
 }

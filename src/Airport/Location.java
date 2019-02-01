@@ -36,6 +36,10 @@ public class Location {
         }
     }
 
+    public String getLocationID() {
+        return locationID;
+    }
+
     public String[] getConnectedLocations(){
         return connectedLocations;
     }

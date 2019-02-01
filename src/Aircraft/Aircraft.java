@@ -1,5 +1,8 @@
 package Aircraft;
 
+import Airport.EventHoldShort;
+import Airport.EventRunwayClearedForTakeOff;
+import Airport.EventRunwayClearedToLand;
 import Airport.EventTaxi;
 import com.google.common.eventbus.Subscribe;
 
@@ -57,20 +60,35 @@ public class Aircraft extends Subscriber{
     }
 
     @Subscribe
-    public void receive(EventTaxi taxi) {
-
+    public void receive(EventTaxi event) {
+        if(event.getAircraft()==id){
+            System.out.println("EventTaxi "+id);
+            System.out.println(event.toString());
+        }
     }
 
-    public void holdShort(){
-
+    @Subscribe
+    public void receive(EventHoldShort event){
+        if(event.getAircraft()==id){
+            System.out.println("EventHoldShort "+id);
+            System.out.println(event.toString());
+        }
     }
 
-    public void takeOff(){
-
+    @Subscribe
+    public void receive(EventRunwayClearedForTakeOff event){
+        if(event.getAircraft()==id){
+            System.out.println("EventRunwayClearedForTakeOff "+id);
+            System.out.println(event.toString());
+        }
     }
 
-    public void land(){
-
+    @Subscribe
+    public void receive(EventRunwayClearedToLand event){
+        if(event.getAircraft()==id){
+            System.out.println("EventRunwayClearedToLand "+id);
+            System.out.println(event.toString());
+        }
     }
 
     public AircraftID getId() {
