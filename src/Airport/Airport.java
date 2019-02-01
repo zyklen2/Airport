@@ -27,27 +27,27 @@ public class Airport {
         theCheckpoints.add(new Location("O1",connectedLocations));
         connectedLocations=new String[]{"O1","O3","N1","N2","N3","X1","X3"};
         theCheckpoints.add(new Location("O2",connectedLocations));
-        connectedLocations=new String[]{"O2","O4"};
+        connectedLocations=new String[]{"O2","O4","N2","N3","N4"};
         theCheckpoints.add(new Location("O3",connectedLocations));
-        connectedLocations=new String[]{"O3","O5"};
+        connectedLocations=new String[]{"O3","O5","N3","N4","N5"};
         theCheckpoints.add(new Location("O4",connectedLocations));
-        connectedLocations=new String[]{"O4","O6","X9","X11"};
+        connectedLocations=new String[]{"O4","O6","N4","N5","N6","X9","X11"};
         theCheckpoints.add(new Location("O5",connectedLocations));
-        connectedLocations=new String[]{"O5","X13","X15"};
+        connectedLocations=new String[]{"O5","N5","N6","X13","X15"};
         theCheckpoints.add(new Location("O6",connectedLocations));
         //N-Line
-        connectedLocations=new String[]{"N2","X5","X8"};
+        connectedLocations=new String[]{"N2","O1","O2","X5","X8"};
         theCheckpoints.add(new Location("N1",connectedLocations));
-        connectedLocations=new String[]{"N1","N3","X2","X4"};
+        connectedLocations=new String[]{"N1","N3","O1","O2","O3","X2","X4"};
         theCheckpoints.add(new Location("N2",connectedLocations));
         theGates.get(0).setConnectedLocation(theCheckpoints.get(8));
-        connectedLocations=new String[]{"N2","N4"};
+        connectedLocations=new String[]{"N2","N4","O2","O3","O4"};
         theCheckpoints.add(new Location("N3",connectedLocations));
-        connectedLocations=new String[]{"N3","N5"};
+        connectedLocations=new String[]{"N3","N5","O3","O4","O5"};
         theCheckpoints.add(new Location("N4",connectedLocations));
-        connectedLocations=new String[]{"N4","N6","X10","X12"};
+        connectedLocations=new String[]{"N4","N6","O4","O5","O6","X10","X12"};
         theCheckpoints.add(new Location("N5",connectedLocations));
-        connectedLocations=new String[]{"N5","X14","X16"};
+        connectedLocations=new String[]{"N5","O5","O6","X14","X16"};
         theCheckpoints.add(new Location("N6",connectedLocations));
         //M-Line
         connectedLocations=new String[]{"M2","X1","X2"};
