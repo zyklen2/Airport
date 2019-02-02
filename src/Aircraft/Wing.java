@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Wing {
     private WingPosition theWingPosition;
     private ArrayList<Fan> theFans = new ArrayList<Fan>();
-    private ArrayList<Flap> theFlaps = new ArrayList<Flap>();
-    public Wing(WingPosition theWingPosition,ArrayList<Flap> theFlaps){
+    private ArrayList<IFlap> theFlaps = new ArrayList<IFlap>();
+    public Wing(WingPosition theWingPosition,ArrayList<IFlap> theFlaps){
         this.theFlaps=theFlaps;
         this.theWingPosition=theWingPosition;
         if(theWingPosition==WingPosition.Left) {

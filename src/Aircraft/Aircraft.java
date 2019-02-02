@@ -8,15 +8,15 @@ import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-public class Aircraft extends Subscriber{
+public class Aircraft extends Subscriber implements IAircraft {
     private AircraftID id;
     private String manufacturer;
     private int numberOfSeatFirstClass;
     private int numberOfSeatBusinessClass;
     private int numberOfSeatEconomyClass;
-    private ArrayList<Seat> theSeats = new ArrayList<Seat>();
+    private ArrayList<ISeat> theSeats = new ArrayList<ISeat>();
     private ArrayList<Wing> theWing = new ArrayList<Wing>();
-    private ArrayList<ArrayList<Flap>> theFlaps = new ArrayList<ArrayList<Flap>>();
+    private ArrayList<ArrayList<IFlap>> theFlaps = new ArrayList<ArrayList<IFlap>>();
     private ArrayList<Gear> theGears = new ArrayList<Gear>();
     private Crew theCrew;
 
@@ -40,7 +40,7 @@ public class Aircraft extends Subscriber{
             seatID++;
         }
         for(int i=1;i<3;i++){
-            ArrayList<Flap> tempFlaps = new ArrayList<Flap>();
+            ArrayList<IFlap> tempFlaps = new ArrayList<IFlap>();
             for(int j=0;j<2;j++){
                 tempFlaps.add(new Flap(i*j));
             }
@@ -59,6 +59,7 @@ public class Aircraft extends Subscriber{
         this.theCrew=theCrew;
     }
 
+    @Override
     @Subscribe
     public void receive(EventTaxi event) {
         if(event.getAircraft()==id){
@@ -67,6 +68,7 @@ public class Aircraft extends Subscriber{
         }
     }
 
+    @Override
     @Subscribe
     public void receive(EventHoldShort event){
         if(event.getAircraft()==id){
@@ -75,6 +77,7 @@ public class Aircraft extends Subscriber{
         }
     }
 
+    @Override
     @Subscribe
     public void receive(EventRunwayClearedForTakeOff event){
         if(event.getAircraft()==id){
@@ -83,6 +86,7 @@ public class Aircraft extends Subscriber{
         }
     }
 
+    @Override
     @Subscribe
     public void receive(EventRunwayClearedToLand event){
         if(event.getAircraft()==id){
@@ -91,6 +95,7 @@ public class Aircraft extends Subscriber{
         }
     }
 
+    @Override
     public AircraftID getId() {
         return id;
     }

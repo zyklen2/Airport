@@ -2,7 +2,7 @@ package Airport;
 
 import Aircraft.Aircraft;
 
-public class Location {
+public class Location implements ILocation {
     private String locationID;
     private String[] connectedLocations;
     private Aircraft currentAircraft =null;
@@ -15,18 +15,22 @@ public class Location {
         this.locationID = locationID;
         this.connectedLocations = connectedLocations;
     }
+    @Override
     public void addAirplane(Aircraft currentAriplane){
         this.currentAircraft = currentAriplane;
     }
 
+    @Override
     public Aircraft getCurrentAriplane() {
         return currentAircraft;
     }
 
+    @Override
     public void resetCurrentAirplane(){
         currentAircraft =null;
     }
 
+    @Override
     public boolean hasAirplane(){
         if(currentAircraft !=null) {
             return true;
@@ -36,10 +40,12 @@ public class Location {
         }
     }
 
+    @Override
     public String getLocationID() {
         return locationID;
     }
 
+    @Override
     public String[] getConnectedLocations(){
         return connectedLocations;
     }

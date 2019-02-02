@@ -5,21 +5,18 @@ import People.Pilot;
 
 import java.util.ArrayList;
 
-public class Airport {
+public class Airport implements IAirport {
 
     //EVENTID??????????????
     private EventID theEventID=new EventID();
-    private ArrayList<Gate> theGates=new ArrayList<Gate>();
+    private ArrayList<IGate> theGates=new ArrayList<>();
     private ArrayList<Pilot[]> thePilots=new ArrayList<>();
     private ArrayList<FlightAttendant[]> theFlightAttendants=new ArrayList<>();
-    private ArrayList<Aircraft> theAircrafts =new ArrayList<Aircraft>();
-    private ArrayList<Location> theCheckpoints=new ArrayList<Location>();
-    private ArrayList<Location> theCrossroads=new ArrayList<Location>();
-    private ArrayList<Location> theRunwayConnectors=new ArrayList<Location>();
-    private ArrayList<Location> theGateLocations=new ArrayList<Location>();
-    AirportOperationsDatabase theAirportOperationsDatabase;
-    private Tower theTower;
-    private ApronControl theApronControl;
+    private ArrayList<IAircraft> theAircrafts =new ArrayList<>();
+    private ArrayList<ILocation> theLocations =new ArrayList<ILocation>();
+    IAirportOperationsDatabase theAirportOperationsDatabase;
+    private ITower theTower;
+    private IApronControl theApronControl;
     public Airport(){
         //Tower and ApronControl
         theAirportOperationsDatabase =new AirportOperationsDatabase();
@@ -113,6 +110,7 @@ public class Airport {
             //Add the Airplane as Subscriber to the Tower and ApronControl
             theTower.addAirplane(tempAircraft);
             theApronControl.addAirplane(tempAircraft);
+            initializeAndSetLocations();
         }
 
 
@@ -125,137 +123,149 @@ public class Airport {
         //PARRALELSPUREN SIND DIREKTER WEG ZUM GATE
 
         //O-Line
-        connectedLocations=new String[]{"O2","N1","N2","X6","X7"};
-        theCheckpoints.add(new Location("O1",connectedLocations));
-        connectedLocations=new String[]{"O1","O3","N1","N2","N3","X1","X3"};
-        theCheckpoints.add(new Location("O2",connectedLocations));
-        connectedLocations=new String[]{"O2","O4","N2","N3","N4"};
-        theCheckpoints.add(new Location("O3",connectedLocations));
-        connectedLocations=new String[]{"O3","O5","N3","N4","N5"};
-        theCheckpoints.add(new Location("O4",connectedLocations));
-        connectedLocations=new String[]{"O4","O6","N4","N5","N6","X9","X11"};
-        theCheckpoints.add(new Location("O5",connectedLocations));
-        connectedLocations=new String[]{"O5","N5","N6","X13","X15"};
-        theCheckpoints.add(new Location("O6",connectedLocations));
+        connectedLocations=new String[]{"O2","A01","N1","N2","X6","X7"};
+        theLocations.add(new Location("O1",connectedLocations));
+        connectedLocations=new String[]{"O1","O3","A01","A02","N1","N2","N3","X1","X3"};
+        theLocations.add(new Location("O2",connectedLocations));
+        connectedLocations=new String[]{"O2","O4","A02","A03","N2","N3","N4"};
+        theLocations.add(new Location("O3",connectedLocations));
+        connectedLocations=new String[]{"O3","O5","A03","A04","N3","N4","N5"};
+        theLocations.add(new Location("O4",connectedLocations));
+        connectedLocations=new String[]{"O4","O6","A04","A05","N4","N5","N6","X9","X11"};
+        theLocations.add(new Location("O5",connectedLocations));
+        connectedLocations=new String[]{"O5","A05","N5","N6","X13","X15"};
+        theLocations.add(new Location("O6",connectedLocations));
         //N-Line
-        connectedLocations=new String[]{"N2","O1","O2","X5","X8"};
-        theCheckpoints.add(new Location("N1",connectedLocations));
-        connectedLocations=new String[]{"N1","N3","O1","O2","O3","X2","X4"};
-        theCheckpoints.add(new Location("N2",connectedLocations));
-        connectedLocations=new String[]{"N2","N4","O2","O3","O4"};
-        theCheckpoints.add(new Location("N3",connectedLocations));
-        connectedLocations=new String[]{"N3","N5","O3","O4","O5"};
-        theCheckpoints.add(new Location("N4",connectedLocations));
-        connectedLocations=new String[]{"N4","N6","O4","O5","O6","X10","X12"};
-        theCheckpoints.add(new Location("N5",connectedLocations));
-        connectedLocations=new String[]{"N5","O5","O6","X14","X16"};
-        theCheckpoints.add(new Location("N6",connectedLocations));
+        connectedLocations=new String[]{"N2","A01","O1","O2","X5","X8"};
+        theLocations.add(new Location("N1",connectedLocations));
+        connectedLocations=new String[]{"N1","N3","A01","O1","O2","O3","X2","X4"};
+        theLocations.add(new Location("N2",connectedLocations));
+        connectedLocations=new String[]{"N2","N4","A02","A03","O2","O3","O4"};
+        theLocations.add(new Location("N3",connectedLocations));
+        connectedLocations=new String[]{"N3","N5","A03","A04","O3","O4","O5"};
+        theLocations.add(new Location("N4",connectedLocations));
+        connectedLocations=new String[]{"N4","N6","A04","A05","O4","O5","O6","X10","X12"};
+        theLocations.add(new Location("N5",connectedLocations));
+        connectedLocations=new String[]{"N5","A05","O5","O6","X14","X16"};
+        theLocations.add(new Location("N6",connectedLocations));
         //M-Line
-        connectedLocations=new String[]{"M2","X1","X2"};
-        theCheckpoints.add(new Location("M1",connectedLocations));
-        connectedLocations=new String[]{"M1","M3","X7","X8"};
-        theCheckpoints.add(new Location("M2",connectedLocations));
-        connectedLocations=new String[]{"M2","M4"};
-        theCheckpoints.add(new Location("M3",connectedLocations));
-        connectedLocations=new String[]{"M3","M5"};
-        theCheckpoints.add(new Location("M4",connectedLocations));
-        connectedLocations=new String[]{"M4","M6","X15","X16"};
-        theCheckpoints.add(new Location("M5",connectedLocations));
-        connectedLocations=new String[]{"M5","X9","X10"};
-        theCheckpoints.add(new Location("M6",connectedLocations));
+        connectedLocations=new String[]{"M2","B01","L1","L2","X1","X2"};
+        theLocations.add(new Location("M1",connectedLocations));
+        connectedLocations=new String[]{"M1","M3","B01","B02","L1","L2","L3","X7","X8"};
+        theLocations.add(new Location("M2",connectedLocations));
+        connectedLocations=new String[]{"M2","M4","B02","B03","L2","L3","L4"};
+        theLocations.add(new Location("M3",connectedLocations));
+        connectedLocations=new String[]{"M3","M5","B03","B04","L3","L4","L5",};
+        theLocations.add(new Location("M4",connectedLocations));
+        connectedLocations=new String[]{"M4","M6","B04","B05","L4","L5","L6","X15","X16"};
+        theLocations.add(new Location("M5",connectedLocations));
+        connectedLocations=new String[]{"M5","B05","L5","L6","X9","X10"};
+        theLocations.add(new Location("M6",connectedLocations));
         //L-Line
-        connectedLocations=new String[]{"L2","X3","X4"};
-        theCheckpoints.add(new Location("L1",connectedLocations));
-        connectedLocations=new String[]{"L1","L3","X5","X6"};
-        theCheckpoints.add(new Location("L2",connectedLocations));
-        connectedLocations=new String[]{"L2","L4"};
-        theCheckpoints.add(new Location("L3",connectedLocations));
-        connectedLocations=new String[]{"L3","L5"};
-        theCheckpoints.add(new Location("L4",connectedLocations));
-        connectedLocations=new String[]{"L4","L6","X13","X14"};
-        theCheckpoints.add(new Location("L5",connectedLocations));
-        connectedLocations=new String[]{"L5","X11","X12"};
-        theCheckpoints.add(new Location("L6",connectedLocations));
+        connectedLocations=new String[]{"L2","B01","M1","M2","X3","X4"};
+        theLocations.add(new Location("L1",connectedLocations));
+        connectedLocations=new String[]{"L1","L3","B01","B02","M1","M2","M3","X5","X6"};
+        theLocations.add(new Location("L2",connectedLocations));
+        connectedLocations=new String[]{"L2","L4","B02","B03","M2","M3","M4"};
+        theLocations.add(new Location("L3",connectedLocations));
+        connectedLocations=new String[]{"L3","L5","B03","B04","M3","M4","M5"};
+        theLocations.add(new Location("L4",connectedLocations));
+        connectedLocations=new String[]{"L4","L6","B04","B05","M4","M5","M6","X13","X14"};
+        theLocations.add(new Location("L5",connectedLocations));
+        connectedLocations=new String[]{"L5","B05","M5","M6","X11","X12"};
+        theLocations.add(new Location("L6",connectedLocations));
         //Crossroads
         connectedLocations=new String[]{"O2","M1"};
-        theCrossroads.add(new Location("X1",connectedLocations));
+        theLocations.add(new Location("X1",connectedLocations));
         connectedLocations=new String[]{"N2","M1"};
-        theCrossroads.add(new Location("X2",connectedLocations));
+        theLocations.add(new Location("X2",connectedLocations));
         connectedLocations=new String[]{"O2","L1"};
-        theCrossroads.add(new Location("X3",connectedLocations));
+        theLocations.add(new Location("X3",connectedLocations));
         connectedLocations=new String[]{"N2","L1"};
-        theCrossroads.add(new Location("X4",connectedLocations));
+        theLocations.add(new Location("X4",connectedLocations));
         connectedLocations=new String[]{"L2","N1"};
-        theCrossroads.add(new Location("X5",connectedLocations));
+        theLocations.add(new Location("X5",connectedLocations));
         connectedLocations=new String[]{"L2","O1"};
-        theCrossroads.add(new Location("X6",connectedLocations));
+        theLocations.add(new Location("X6",connectedLocations));
         connectedLocations=new String[]{"M2","O1"};
-        theCrossroads.add(new Location("X7",connectedLocations));
+        theLocations.add(new Location("X7",connectedLocations));
         connectedLocations=new String[]{"M2","N1"};
-        theCrossroads.add(new Location("X8",connectedLocations));
+        theLocations.add(new Location("X8",connectedLocations));
         connectedLocations=new String[]{"O2","M6"};
-        theCrossroads.add(new Location("X9",connectedLocations));
+        theLocations.add(new Location("X9",connectedLocations));
         connectedLocations=new String[]{"N5","M6"};
-        theCrossroads.add(new Location("X10",connectedLocations));
+        theLocations.add(new Location("X10",connectedLocations));
         connectedLocations=new String[]{"O5","L6"};
-        theCrossroads.add(new Location("X11",connectedLocations));
+        theLocations.add(new Location("X11",connectedLocations));
         connectedLocations=new String[]{"N5","L6"};
-        theCrossroads.add(new Location("X12",connectedLocations));
+        theLocations.add(new Location("X12",connectedLocations));
         connectedLocations=new String[]{"L5","O6"};
-        theCrossroads.add(new Location("X13",connectedLocations));
+        theLocations.add(new Location("X13",connectedLocations));
         connectedLocations=new String[]{"L5","N6"};
-        theCrossroads.add(new Location("X14",connectedLocations));
+        theLocations.add(new Location("X14",connectedLocations));
         connectedLocations=new String[]{"M5","O6"};
-        theCrossroads.add(new Location("X15",connectedLocations));
+        theLocations.add(new Location("X15",connectedLocations));
         connectedLocations=new String[]{"M5","N6"};
-        theCrossroads.add(new Location("X16",connectedLocations));
+        theLocations.add(new Location("X16",connectedLocations));
         connectedLocations=new String[]{"O1","N1"};
         //Runway Connectors
-        theRunwayConnectors.add(new Location("S1",connectedLocations));
+        connectedLocations=new String[]{"O1","N1"};
+        theLocations.add(new Location("S1",connectedLocations));
         connectedLocations=new String[]{"M1","L1"};
-        theRunwayConnectors.add(new Location("S2",connectedLocations));
+        theLocations.add(new Location("S2",connectedLocations));
         connectedLocations=new String[]{"O6","N6"};
-        theRunwayConnectors.add(new Location("S3",connectedLocations));
+        theLocations.add(new Location("S3",connectedLocations));
         connectedLocations=new String[]{"M6","L6"};
-        theRunwayConnectors.add(new Location("S4",connectedLocations));
+        theLocations.add(new Location("S4",connectedLocations));
         //Gates
-        connectedLocations=new String[]{"N1","N2"};
-        theGateLocations.add(new GateLocation(GateID.A01,connectedLocations));
-        connectedLocations=new String[]{"N2","N3"};
-        theGateLocations.add(new GateLocation(GateID.A02,connectedLocations));
-        connectedLocations=new String[]{"N3","N4"};
-        theGateLocations.add(new GateLocation(GateID.A03,connectedLocations));
-        connectedLocations=new String[]{"N4","N5"};
-        theGateLocations.add(new GateLocation(GateID.A04,connectedLocations));
-        connectedLocations=new String[]{"N5","N6"};
-        theGateLocations.add(new GateLocation(GateID.A05,connectedLocations));
-        connectedLocations=new String[]{"M1","M2"};
-        theGateLocations.add(new GateLocation(GateID.B01,connectedLocations));
-        connectedLocations=new String[]{"M2","M3"};
-        theGateLocations.add(new GateLocation(GateID.B02,connectedLocations));
-        connectedLocations=new String[]{"M3","M4"};
-        theGateLocations.add(new GateLocation(GateID.B03,connectedLocations));
-        connectedLocations=new String[]{"M4","M5"};
-        theGateLocations.add(new GateLocation(GateID.B04,connectedLocations));
-        connectedLocations=new String[]{"M5","M6"};
-        theGateLocations.add(new GateLocation(GateID.B05,connectedLocations));
+        connectedLocations=new String[]{"N1","N2","O1","O2"};
+        theLocations.add(new Location(GateID.A01.toString(),connectedLocations));
+        connectedLocations=new String[]{"N2","N3","O2","O3"};
+        theLocations.add(new Location(GateID.A02.toString(),connectedLocations));
+        connectedLocations=new String[]{"N3","N4","O3","O4"};
+        theLocations.add(new Location(GateID.A03.toString(),connectedLocations));
+        connectedLocations=new String[]{"N4","N5","N4","N5"};
+        theLocations.add(new Location(GateID.A04.toString(),connectedLocations));
+        connectedLocations=new String[]{"N5","N6","N5","N6"};
+        theLocations.add(new Location(GateID.A05.toString(),connectedLocations));
+        connectedLocations=new String[]{"M1","M2","L1","L2"};
+        theLocations.add(new Location(GateID.B01.toString(),connectedLocations));
+        connectedLocations=new String[]{"M2","M3","L2","L3"};
+        theLocations.add(new Location(GateID.B02.toString(),connectedLocations));
+        connectedLocations=new String[]{"M3","M4","L3","L4"};
+        theLocations.add(new Location(GateID.B03.toString(),connectedLocations));
+        connectedLocations=new String[]{"M4","M5","L4","L5"};
+        theLocations.add(new Location(GateID.B04.toString(),connectedLocations));
+        connectedLocations=new String[]{"M5","M6","L5","L6"};
+        theLocations.add(new Location(GateID.B05.toString(),connectedLocations));
+        connectedLocations=new String[]{"M5","M6","L5","L6"};
+        //Runways
+        connectedLocations=new String[]{"S2"};
+        theLocations.add(new Location("08L",connectedLocations));
+        connectedLocations=new String[]{"S4"};
+        theLocations.add(new Location("08R",connectedLocations));
+        connectedLocations=new String[]{"S1"};
+        theLocations.add(new Location("26R",connectedLocations));
+        connectedLocations=new String[]{"S3"};
+        theLocations.add(new Location("26L",connectedLocations));
     }
 
-    public void landAndStart(Aircraft aircraftToLand,Aircraft aircraftToStart,String landingRunway,String startRunway,String landingRunwayConnector,String startRunwayConnector,String exactLandPoint,String exactStartpoint,String destinationGateID){
+    @Override
+    public void landAndStart(Aircraft aircraftToLand, Aircraft aircraftToStart, String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID){
         theTower.eventRunwayClearedToLand(aircraftToLand,landingRunway);
         theTower.eventHoldShort(aircraftToLand,landingRunwayConnector);
-        ArrayList<String>theWay=new ArrayList<>();
-        theApronControl.eventTaxi(aircraftToStart,startRunwayConnector,theWay,exactStartpoint);
+        theApronControl.eventTaxi(aircraftToStart,startRunwayConnector,theWayToRunway,exactStartpoint);
         theApronControl.eventHoldShort(aircraftToStart,startRunway);
-        theApronControl.eventTaxi(aircraftToLand,destinationGateID,theWay,destinationGateID);
+        theApronControl.eventTaxi(aircraftToLand,destinationGateID,theWayToGate,destinationGateID);
         theApronControl.eventRunwayClearedForTakeOff(aircraftToStart,startRunway);
     }
 
-    public void landAndStart(){
-        Aircraft aircraftToLand=theAircrafts.get(0);
-        Aircraft aircraftToStart=theAircrafts.get(1);
-        String landingRunway="O8L";
-        String startRunway="O8R";
+    @Override
+    public void landAndStartExcample(){
+        IAircraft aircraftToLand=theAircrafts.get(0);
+        IAircraft aircraftToStart=theAircrafts.get(1);
+        String landingRunway="08L";
+        String startRunway="08R";
         String landingRunwayConnector="S1";
         String startRunwayConnector="S4";
         String exactStartpoint="M6";
@@ -276,11 +286,13 @@ public class Airport {
         theApronControl.eventRunwayClearedForTakeOff(aircraftToStart,startRunway);
     }
 
+    @Override
     public ArrayList<String> getLoggedInformationsToAirplane(AircraftID theID){
         String theAircraftID=theID.toString();
         return theAirportOperationsDatabase.getDataOfAirplane(theAircraftID);
     }
 
+    @Override
     public ArrayList<String> getAllLoggedData(){
         return theAirportOperationsDatabase.getAllData();
     }

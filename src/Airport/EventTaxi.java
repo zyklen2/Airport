@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 public class EventTaxi {
     private int eventID;
-    private Aircraft aircraft;
+    private IAircraft aircraft;
     private String destination;
     private ArrayList<String> wayToDestination;
     private String exactDestination;
 
     //Wenn wenn das Ziel ein Runway ist, muss der RunwayConnector und der genaue Punkt angegeben werden
-    public EventTaxi(Aircraft aircraft, String destination, ArrayList<String> wayToDestination, String exactDestination, int eventID) {
+    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination, String exactDestination, int eventID) {
         this.eventID = eventID;
         this.aircraft = aircraft;
         this.destination = destination;
@@ -21,7 +21,7 @@ public class EventTaxi {
     }
 
     //Wenn das Ziel ein Gate ist, muss nur das Gate selbst angegeben werden
-    public EventTaxi(Aircraft aircraft, String destination, ArrayList<String> wayToDestination,int eventID) {
+    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination,int eventID) {
         this.eventID = eventID;
         this.aircraft = aircraft;
         this.destination = destination;

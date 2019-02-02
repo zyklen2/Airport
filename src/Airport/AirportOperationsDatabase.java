@@ -4,15 +4,17 @@ import Aircraft.AircraftID;
 
 import java.util.ArrayList;
 
-public class AirportOperationsDatabase {
-    private ArrayList<AirportOperationsDatabaseData> theDatabase;
+public class AirportOperationsDatabase implements IAirportOperationsDatabase {
+    private ArrayList<IAirportOperationsDatabaseData> theDatabase;
     public AirportOperationsDatabase(){
-        theDatabase=new ArrayList<AirportOperationsDatabaseData>();
+        theDatabase=new ArrayList<IAirportOperationsDatabaseData>();
     }
+    @Override
     public void addData(AircraftID aircraftID, String eventMessage){
         theDatabase.add(new AirportOperationsDatabaseData(aircraftID,eventMessage));
     }
 
+    @Override
     public ArrayList<String> getDataOfAirplane(String aircraftID){
         ArrayList<String> theData=new ArrayList<String>();
         for(int i=0;i<theDatabase.size();i++){
@@ -23,6 +25,7 @@ public class AirportOperationsDatabase {
         return theData;
     }
 
+    @Override
     public ArrayList<String> getAllData(){
         ArrayList<String> theData=new ArrayList<String>();
         for(int i=0;i<theDatabase.size();i++){

@@ -3,11 +3,11 @@ package Airport;
 import Aircraft.*;
 
 public class EventRunwayClearedForTakeOff {
-    Aircraft aircraft;
-    String runway;
-    int eventID;
+    private IAircraft aircraft;
+    private String runway;
+    private int eventID;
 
-    public EventRunwayClearedForTakeOff(Aircraft aircraft, String runway, int eventID) {
+    public EventRunwayClearedForTakeOff(IAircraft aircraft, String runway, int eventID) {
         this.aircraft = aircraft;
         this.runway = runway;
         this.eventID = eventID;

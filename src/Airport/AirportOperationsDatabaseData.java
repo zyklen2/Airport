@@ -5,7 +5,7 @@ import Aircraft.AircraftID;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class AirportOperationsDatabaseData {
+public class AirportOperationsDatabaseData implements IAirportOperationsDatabaseData {
     private AircraftID aircraftID;
     private LocalDateTime timeStemp;
     private String eventMessage;
@@ -15,10 +15,12 @@ public class AirportOperationsDatabaseData {
         this.eventMessage=eventMessage;
     }
 
+    @Override
     public AircraftID getAircraftID(){
         return aircraftID;
     }
 
+    @Override
     public String getDataInformation(){
         return "(#Aircraft: "+aircraftID+", Time: "+timeStemp.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))+", Message: "+eventMessage+")";
     }
