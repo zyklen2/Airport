@@ -7,7 +7,10 @@ import java.util.ArrayList;
 
 public class Airport implements IAirport {
 
-    //EVENTID??????????????
+    //Abfrage ob der Weg stimmt der dem Event mitgegeben werden soll
+    //Locations nötig? -> Airplane den Locations bei Event hinzufügen
+    //Alle Eigenschaften der versch. Flugzeugteile auf den derzeitigen Status anpassen
+
     private EventID theEventID=new EventID();
     private ArrayList<IGate> theGates=new ArrayList<>();
     private ArrayList<Pilot[]> thePilots=new ArrayList<>();
@@ -17,6 +20,8 @@ public class Airport implements IAirport {
     IAirportOperationsDatabase theAirportOperationsDatabase;
     private ITower theTower;
     private IApronControl theApronControl;
+    private String[] start;
+    private String[] land;
     public Airport(){
         //Tower and ApronControl
         theAirportOperationsDatabase =new AirportOperationsDatabase();
@@ -41,70 +46,115 @@ public class Airport implements IAirport {
             }
             Crew theCrew = new Crew(pilots,flightAttendants);
             AircraftID theAircraftID=AircraftID.F01;
+            String tempLocation="";
+            String tempStatus="";
             switch (i+1){
                 case 1:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F01;
                     break;
                 case 2:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F02;
                     break;
                 case 3:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F03;
                     break;
                 case 4:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F04;
                     break;
                 case 5:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F05;
                     break;
                 case 6:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F06;
                     break;
                 case 7:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F07;
                     break;
                 case 8:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F08;
                     break;
                 case 9:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F09;
                     break;
                 case 10:
+                    tempLocation="";
+                    tempStatus="";
                     theAircraftID=AircraftID.F10;
                     break;
                 case 11:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F11;
                     break;
                 case 12:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F12;
                     break;
                 case 13:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F13;
                     break;
                 case 14:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F14;
                     break;
                 case 15:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F15;
                     break;
                 case 16:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F16;
                     break;
                 case 17:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F17;
                     break;
                 case 18:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F18;
                     break;
                 case 19:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F19;
                     break;
                 case 20:
+                    tempLocation="Flying";
+                    tempStatus="Flying";
                     theAircraftID=AircraftID.F20;
                     break;
             }
-            Aircraft tempAircraft = new Aircraft(theAircraftID,"Airbus",100,150,318,theCrew);
+            Aircraft tempAircraft = new Aircraft(theAircraftID,"Airbus",100,150,318,tempLocation,tempStatus,theCrew);
             theAircrafts.add(tempAircraft);
+            if(i<10){
+                theGates.get(i).addAircraft(tempAircraft);
+            }
             thePilots.add(pilots);
             theFlightAttendants.add(flightAttendants);
             //Add the Airplane as Subscriber to the Tower and ApronControl
@@ -115,6 +165,21 @@ public class Airport implements IAirport {
 
 
     }
+
+    private void initializeWindDirection(){
+        int windDirection=(int)(Math.random()*3)+1;//1=WindAusOst,2=WindAusWest
+        switch (windDirection){
+            case 1://Wind aus Osten, also wird auf jeweils 08 gelandet und 26 gestartet
+                start=new String[]{"08L","08R"};
+                land=new String[]{"26L","26R"};
+                break;
+            case 2://Wind aus Westen, also wird auf jeweils 26 gelandet und 08 gestartet
+                start=new String[]{"26L","26R"};
+                land=new String[]{"08L","08R"};
+                break;
+        }
+    }
+
 
     private void initializeAndSetLocations(){
         String []connectedLocations;
@@ -251,14 +316,64 @@ public class Airport implements IAirport {
     }
 
     @Override
-    public void landAndStart(Aircraft aircraftToLand, Aircraft aircraftToStart, String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID){
+    public void landAndStart(IAircraft aircraftToLand, IAircraft aircraftToStart, String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID){
         theTower.eventRunwayClearedToLand(aircraftToLand,landingRunway);
         theTower.eventHoldShort(aircraftToLand,landingRunwayConnector);
         theApronControl.eventTaxi(aircraftToStart,startRunwayConnector,theWayToRunway,exactStartpoint);
-        theApronControl.eventHoldShort(aircraftToStart,startRunway);
+        theApronControl.eventHoldShort(aircraftToStart,startRunwayConnector);
         theApronControl.eventTaxi(aircraftToLand,destinationGateID,theWayToGate,destinationGateID);
         theApronControl.eventRunwayClearedForTakeOff(aircraftToStart,startRunway);
     }
+
+    @Override
+    public void landAircraft(IAircraft aircraftToLand, String landingRunway){
+        theTower.eventRunwayClearedToLand(aircraftToLand,landingRunway);
+    }
+
+    @Override
+    public void holdShortAircraftTower(IAircraft aircraft, String runwayConnector){
+        theTower.eventHoldShort(aircraft,runwayConnector);
+    }
+
+    @Override
+    public void holdShortAircraftApronControl(IAircraft aircraft, String runwayConnector){
+        theApronControl.eventHoldShort(aircraft,runwayConnector);
+    }
+
+    @Override
+    public void taxiAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination){
+        boolean eventAllowed=false;
+        if(runwayConnector==exactDestination){//Flugzeug in Gate hinein
+            for(IGate tempGate: theGates){
+                if(runwayConnector==tempGate.getGateID().toString()&&tempGate.getTheAircraft()==null){
+                    if(aircraft.getCurrentGate()!=null){
+                        aircraft.getCurrentGate().resetAircraft();
+                    }
+                    aircraft.setGate(tempGate);
+                    tempGate.addAircraft(aircraft);
+                    eventAllowed=true;
+                    break;
+                }
+            }
+        }
+        else {
+            if (aircraft.getCurrentStatus() == "InGate") {//Flugzeug aus Gate raus
+                if (aircraft.getCurrentGate()!=null) {
+                    aircraft.getCurrentGate().resetAircraft();
+                    eventAllowed = true;
+                }
+            }
+        }
+        if(eventAllowed) {
+            theApronControl.eventTaxi(aircraft, runwayConnector, theWayToRunway, exactDestination);
+        }
+    }
+
+    @Override
+    public void startAircraft(IAircraft aircraft, String runway){
+        theTower.eventRunwayClearedForTakeOff(aircraft,runway);
+    }
+
 
     @Override
     public void landAndStartExcample(){
@@ -283,13 +398,18 @@ public class Airport implements IAirport {
         ArrayList<String>theWay2=new ArrayList<>();
         theWay2.add("O1");
         theApronControl.eventTaxi(aircraftToLand,destinationGateID,theWay2);
-        theApronControl.eventRunwayClearedForTakeOff(aircraftToStart,startRunway);
+        theTower.eventRunwayClearedForTakeOff(aircraftToStart,startRunway);
     }
 
     @Override
     public ArrayList<String> getLoggedInformationsToAirplane(AircraftID theID){
         String theAircraftID=theID.toString();
         return theAirportOperationsDatabase.getDataOfAirplane(theAircraftID);
+    }
+
+    @Override
+    public ArrayList<IAircraft> getTheAircrafts() {
+        return theAircrafts;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package Airport;
 
-import Aircraft.IAircraft;
-import Aircraft.Subscriber;
+import Aircraft.*;
 
 import java.util.ArrayList;
 

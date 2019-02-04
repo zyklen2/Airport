@@ -1,9 +1,6 @@
 package Aircraft;
 
-import Airport.EventHoldShort;
-import Airport.EventRunwayClearedForTakeOff;
-import Airport.EventRunwayClearedToLand;
-import Airport.EventTaxi;
+import Airport.*;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -19,13 +16,20 @@ public class Aircraft extends Subscriber implements IAircraft {
     private ArrayList<ArrayList<IFlap>> theFlaps = new ArrayList<ArrayList<IFlap>>();
     private ArrayList<Gear> theGears = new ArrayList<Gear>();
     private Crew theCrew;
+    private String theLocation="";
+    private String theCurrentStatus="";
+    private Flightrecorder theFlightRecoreder;
+    private IGate currentGate;
 
-    public Aircraft(AircraftID id, String manufacturer, int numberOfSeatFirstClass, int numberOfSeatBusinessClass, int numberOfSeatEconomyClass, Crew theCrew){
+    public Aircraft(AircraftID id, String manufacturer, int numberOfSeatFirstClass, int numberOfSeatBusinessClass, int numberOfSeatEconomyClass,String theLocation,String theCurrentStatus, Crew theCrew){
         this.id = id;
         this.manufacturer = manufacturer;
         this.numberOfSeatFirstClass = numberOfSeatFirstClass;
         this.numberOfSeatBusinessClass = numberOfSeatBusinessClass;
         this.numberOfSeatEconomyClass = numberOfSeatEconomyClass;
+        this.theLocation=theLocation;
+        this.theCurrentStatus=theCurrentStatus;
+        theFlightRecoreder=new Flightrecorder();
         int seatID=0;
         for(int i=0;i<numberOfSeatFirstClass;i++){
             theSeats.add(new Seat(seatID,BookingClass.First));
@@ -59,44 +63,103 @@ public class Aircraft extends Subscriber implements IAircraft {
         this.theCrew=theCrew;
     }
 
-    @Override
     @Subscribe
     public void receive(EventTaxi event) {
-        if(event.getAircraft()==id){
-            System.out.println("EventTaxi "+id);
-            System.out.println(event.toString());
+        if(event.getFrequency()==CommunicationFrequencys.ApronControl) {
+            if (event.getAircraft() == id) {
+                System.out.println("EventTaxi " + id);
+                System.out.println(event.toString());
+                if (currentGate != null) {
+                    theCurrentStatus = "Starting";
+                    currentGate=null;
+                } else {
+                    theCurrentStatus = "inTaxi";
+                }
+                theLocation = event.getDestination();
+                theLocation = event.getDestination();
+                theFlightRecoreder.addData(id, event.toString());
+            }
         }
     }
 
-    @Override
     @Subscribe
-    public void receive(EventHoldShort event){
-        if(event.getAircraft()==id){
-            System.out.println("EventHoldShort "+id);
-            System.out.println(event.toString());
+    public void receive(EventHoldShort event) {
+        if ((theCurrentStatus == "Landed"&&event.getFrequency()==CommunicationFrequencys.Tower)||(theCurrentStatus=="Starting"&&event.getFrequency()==CommunicationFrequencys.Tower)){
+            if (event.getAircraft() == id) {
+                System.out.println("EventHoldShort " + id);
+                System.out.println(event.toString());
+                theCurrentStatus = "HoldShort";
+                theLocation = event.getRunwayEntrance();
+                theFlightRecoreder.addData(id, event.toString());
+            }
         }
     }
 
-    @Override
     @Subscribe
     public void receive(EventRunwayClearedForTakeOff event){
-        if(event.getAircraft()==id){
-            System.out.println("EventRunwayClearedForTakeOff "+id);
-            System.out.println(event.toString());
+        if(event.getFrequency()==CommunicationFrequencys.Tower) {
+            if (event.getAircraft() == id) {
+                System.out.println("EventRunwayClearedForTakeOff " + id);
+                System.out.println(event.toString());
+                theCurrentStatus = "Flying";
+                theLocation = "Flying";
+                theFlightRecoreder.addData(id, event.toString());
+            }
+        }
+    }
+
+    @Subscribe
+    public void receive(EventRunwayClearedToLand event){
+        if(event.getFrequency()==CommunicationFrequencys.Tower) {
+            if (event.getAircraft() == id) {
+                System.out.println("EventRunwayClearedToLand " + id);
+                System.out.println(event.toString());
+                theCurrentStatus = "Landed";
+                theLocation = event.getRunway();
+                theFlightRecoreder.addData(id, event.toString());
+            }
         }
     }
 
     @Override
-    @Subscribe
-    public void receive(EventRunwayClearedToLand event){
-        if(event.getAircraft()==id){
-            System.out.println("EventRunwayClearedToLand "+id);
-            System.out.println(event.toString());
-        }
+    public void setGate(IGate theGate){
+        currentGate=theGate;
+        theCurrentStatus="InGate";
+        theLocation=theGate.getGateID().toString();
     }
 
     @Override
     public AircraftID getId() {
         return id;
+    }
+
+    @Override
+    public String getLocation() {
+        return theLocation;
+    }
+
+    @Override
+    public void setLocation(String location) {
+        theLocation = location;
+    }
+
+    @Override
+    public String getCurrentStatus() {
+        return theCurrentStatus;
+    }
+
+    @Override
+    public void setCurrentStatus(String currentStatus) {
+        theCurrentStatus = currentStatus;
+    }
+
+    @Override
+    public ArrayList<String> getRecordedData(){
+        return theFlightRecoreder.getAllData();
+    }
+
+    @Override
+    public IGate getCurrentGate(){
+        return currentGate;
     }
 }

@@ -1,19 +1,17 @@
-package Airport;
+package IAirport;
 
 import Aircraft.*;
 
 import java.util.ArrayList;
 
-public interface IAirport {
+public interface Airport {
     void landAndStart(IAircraft aircraftToLand, IAircraft aircraftToStart, String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID);
 
     void landAircraft(IAircraft aircraftToLand, String landingRunway);
 
-    void holdShortAircraftApronControl(IAircraft aircraft, String runwayConnector);
+    void holdShortAircraft(IAircraft aircraft, String runwayConnector);
 
-    void holdShortAircraftTower(IAircraft aircraft, String runwayConnector);
-
-    void taxiAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination);
+    void taxtAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination);
 
     void startAircraft(IAircraft aircraft, String runway);
 

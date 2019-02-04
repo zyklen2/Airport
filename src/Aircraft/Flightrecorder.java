@@ -1,28 +1,19 @@
-package Airport;
+package Aircraft;
 
-import Aircraft.AircraftID;
+import Airport.DatabaseData;
+import Airport.IDatabaseData;
 
 import java.util.ArrayList;
 
-public class AirportOperationsDatabase implements IAirportOperationsDatabase {
+public class Flightrecorder implements IFlightrecorder {
     private ArrayList<IDatabaseData> theDatabase;
-    public AirportOperationsDatabase(){
+    public Flightrecorder(){
         theDatabase=new ArrayList<IDatabaseData>();
-    }
-    @Override
-    public void addData(AircraftID aircraftID, String eventMessage){
-        theDatabase.add(new DatabaseData(aircraftID,eventMessage));
     }
 
     @Override
-    public ArrayList<String> getDataOfAirplane(String aircraftID){
-        ArrayList<String> theData=new ArrayList<String>();
-        for(int i=0;i<theDatabase.size();i++){
-            if(theDatabase.get(i).getAircraftID().toString()==aircraftID){
-                theData.add(theDatabase.get(i).getDataInformation());
-            }
-        }
-        return theData;
+    public void addData(AircraftID aircraftID, String eventMessage){
+        theDatabase.add(new DatabaseData(aircraftID,eventMessage));
     }
 
     @Override

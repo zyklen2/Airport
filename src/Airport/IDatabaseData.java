@@ -2,7 +2,7 @@ package Airport;
 
 import Aircraft.AircraftID;
 
-public interface IAirportOperationsDatabaseData {
+public interface IDatabaseData {
     AircraftID getAircraftID();
 
     String getDataInformation();

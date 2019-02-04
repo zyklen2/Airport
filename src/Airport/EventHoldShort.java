@@ -14,6 +14,14 @@ public class EventHoldShort {
         this.frequency=frequency;
     }
 
+    public String getRunwayEntrance() {
+        return runwayEntrance;
+    }
+
+    public CommunicationFrequencys getFrequency() {
+        return frequency;
+    }
+
     public AircraftID getAircraft() {
         return aircraft.getId();
     }

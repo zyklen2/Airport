@@ -1,11 +1,11 @@
 package Airport;
 
-import Aircraft.Aircraft;
+import Aircraft.*;
 
 public class Gate implements IGate {
     private boolean isOpen;
     private GateID gateID;
-    private Aircraft theAircraft;
+    private IAircraft theAircraft;
     public Gate(boolean isOpen, GateID gateID) {
         this.isOpen = isOpen;
         this.gateID = gateID;
@@ -13,8 +13,9 @@ public class Gate implements IGate {
     }
 
     @Override
-    public void addAircraft(Aircraft theAircraft){
+    public void addAircraft(IAircraft theAircraft){
         this.theAircraft = theAircraft;
+        theAircraft.setGate(this);
     }
 
     @Override
@@ -23,7 +24,7 @@ public class Gate implements IGate {
     }
 
     @Override
-    public Aircraft getTheAircraft(){
+    public IAircraft getTheAircraft(){
         return theAircraft;
     }
 

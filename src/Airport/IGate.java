@@ -1,13 +1,13 @@
 package Airport;
 
-import Aircraft.Aircraft;
+import Aircraft.*;
 
 public interface IGate {
-    void addAircraft(Aircraft theAircraft);
+    void addAircraft(IAircraft theAircraft);
 
     void resetAircraft();
 
-    Aircraft getTheAircraft();
+    IAircraft getTheAircraft();
 
     GateID getGateID();
 }

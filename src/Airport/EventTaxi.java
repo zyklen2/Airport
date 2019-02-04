@@ -10,32 +10,49 @@ public class EventTaxi {
     private String destination;
     private ArrayList<String> wayToDestination;
     private String exactDestination;
+    private CommunicationFrequencys frequency;
 
     //Wenn wenn das Ziel ein Runway ist, muss der RunwayConnector und der genaue Punkt angegeben werden
-    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination, String exactDestination, int eventID) {
+    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination, String exactDestination,CommunicationFrequencys frequency, int eventID) {
         this.eventID = eventID;
         this.aircraft = aircraft;
         this.destination = destination;
         this.wayToDestination = wayToDestination;
         this.exactDestination = exactDestination;
+        this.frequency=frequency;
     }
 
     //Wenn das Ziel ein Gate ist, muss nur das Gate selbst angegeben werden
-    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination,int eventID) {
+    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination,CommunicationFrequencys frequency,int eventID) {
         this.eventID = eventID;
         this.aircraft = aircraft;
         this.destination = destination;
         this.wayToDestination = wayToDestination;
+        this.frequency=frequency;
     }
 
     public AircraftID getAircraft() {
         return aircraft.getId();
     }
 
+    public String getDestination() {
+        if(exactDestination==null) {
+            return destination;
+        }
+        else{
+            return exactDestination;
+        }
+    }
+
+    public CommunicationFrequencys getFrequency() {
+        return frequency;
+    }
+
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{EventTaxi : ");
         stringBuilder.append(" eventID = ").append(eventID);
+        stringBuilder.append(" eventID = ").append(frequency);
         stringBuilder.append(" aircraft = ").append(aircraft.getId());
         stringBuilder.append(" destinationSide = ").append(destination);
         stringBuilder.append(" wayToDestination = ");

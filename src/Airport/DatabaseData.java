@@ -5,11 +5,11 @@ import Aircraft.AircraftID;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class AirportOperationsDatabaseData implements IAirportOperationsDatabaseData {
+public class DatabaseData implements IDatabaseData {
     private AircraftID aircraftID;
     private LocalDateTime timeStemp;
     private String eventMessage;
-    public AirportOperationsDatabaseData(AircraftID aircraftID, String eventMessage){
+    public DatabaseData(AircraftID aircraftID, String eventMessage){
         this.aircraftID=aircraftID;
         timeStemp=LocalDateTime.now();
         this.eventMessage=eventMessage;
