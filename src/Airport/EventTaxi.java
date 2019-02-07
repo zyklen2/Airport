@@ -52,7 +52,7 @@ public class EventTaxi {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{EventTaxi : ");
         stringBuilder.append(" eventID = ").append(eventID);
-        stringBuilder.append(" eventID = ").append(frequency);
+        stringBuilder.append(" frequency = ").append(frequency.getFrequency());
         stringBuilder.append(" aircraft = ").append(aircraft.getId());
         stringBuilder.append(" destinationSide = ").append(destination);
         stringBuilder.append(" wayToDestination = ");

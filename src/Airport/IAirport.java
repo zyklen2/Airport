@@ -5,7 +5,7 @@ import Aircraft.*;
 import java.util.ArrayList;
 
 public interface IAirport {
-    void landAndStart(IAircraft aircraftToLand, IAircraft aircraftToStart, String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID);
+    void landAndStart(int aircraftPairNumber, String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID);
 
     void landAircraft(IAircraft aircraftToLand, String landingRunway);
 

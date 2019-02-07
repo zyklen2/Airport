@@ -12,9 +12,9 @@ public class Aircraft extends Subscriber implements IAircraft {
     private int numberOfSeatBusinessClass;
     private int numberOfSeatEconomyClass;
     private ArrayList<ISeat> theSeats = new ArrayList<ISeat>();
-    private ArrayList<Wing> theWing = new ArrayList<Wing>();
+    private ArrayList<IWing> theWing = new ArrayList<>();
     private ArrayList<ArrayList<IFlap>> theFlaps = new ArrayList<ArrayList<IFlap>>();
-    private ArrayList<Gear> theGears = new ArrayList<Gear>();
+    private ArrayList<IGear> theGears = new ArrayList<>();
     private Crew theCrew;
     private String theLocation="";
     private String theCurrentStatus="";
@@ -75,7 +75,9 @@ public class Aircraft extends Subscriber implements IAircraft {
                 } else {
                     theCurrentStatus = "inTaxi";
                 }
-                theLocation = event.getDestination();
+                for(IGear tempGear:theGears){
+                    tempGear.releaseBrake();
+                }
                 theLocation = event.getDestination();
                 theFlightRecoreder.addData(id, event.toString());
             }
@@ -88,6 +90,17 @@ public class Aircraft extends Subscriber implements IAircraft {
             if (event.getAircraft() == id) {
                 System.out.println("EventHoldShort " + id);
                 System.out.println(event.toString());
+                if(theCurrentStatus=="Starting"){
+                    theWing.get(0).start();
+                    theWing.get(1).start();
+                }
+                else{
+                    theWing.get(0).landEngineOff();
+                    theWing.get(1).landEngineOff();
+                }
+                for(IGear tempGear:theGears){
+                    tempGear.setBrake();
+                }
                 theCurrentStatus = "HoldShort";
                 theLocation = event.getRunwayEntrance();
                 theFlightRecoreder.addData(id, event.toString());
@@ -103,6 +116,12 @@ public class Aircraft extends Subscriber implements IAircraft {
                 System.out.println(event.toString());
                 theCurrentStatus = "Flying";
                 theLocation = "Flying";
+                theWing.get(0).inFlight();
+                theWing.get(1).inFlight();
+                for(IGear tempGear:theGears){
+                    tempGear.releaseBrake();
+                    tempGear.up();
+                }
                 theFlightRecoreder.addData(id, event.toString());
             }
         }
@@ -116,6 +135,11 @@ public class Aircraft extends Subscriber implements IAircraft {
                 System.out.println(event.toString());
                 theCurrentStatus = "Landed";
                 theLocation = event.getRunway();
+                theWing.get(0).land();
+                theWing.get(0).land();
+                for(IGear tempGear:theGears){
+                    tempGear.down();
+                }
                 theFlightRecoreder.addData(id, event.toString());
             }
         }
@@ -126,6 +150,9 @@ public class Aircraft extends Subscriber implements IAircraft {
         currentGate=theGate;
         theCurrentStatus="InGate";
         theLocation=theGate.getGateID().toString();
+        for(IGear tempGear:theGears){
+            tempGear.setBrake();
+        }
     }
 
     @Override

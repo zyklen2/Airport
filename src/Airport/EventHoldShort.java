@@ -28,9 +28,9 @@ public class EventHoldShort {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{EventRunwayClearedToLand : ");
+        stringBuilder.append("{EventHoldShort : ");
         stringBuilder.append(" eventID = ").append(eventID);
-        stringBuilder.append(" frequency = ").append(frequency);
+        stringBuilder.append(" frequency = ").append(frequency.getFrequency());
         stringBuilder.append(" aircraft = ").append(aircraft.getId());
         stringBuilder.append(" runwayEntrance = ").append(runwayEntrance).append("} ");
         return stringBuilder.toString();

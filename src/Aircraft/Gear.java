@@ -2,7 +2,7 @@ package Aircraft;
 
 import java.util.ArrayList;
 
-public class Gear {
+public class Gear implements IGear {
     private GearType theGearType;
     private boolean isDown;
     private boolean isBrakeSet;
@@ -17,18 +17,22 @@ public class Gear {
         }
     }
 
+    @Override
     public void up(){
         isDown=false;
     }
 
+    @Override
     public void down(){
         isDown=true;
     }
 
+    @Override
     public void setBrake(){
         isBrakeSet=true;
     }
 
+    @Override
     public void releaseBrake(){
         isBrakeSet=false;
     }

@@ -31,7 +31,7 @@ public class EventRunwayClearedToLand {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{EventRunwayClearedToLand : ");
         stringBuilder.append(" eventID = ").append(eventID);
-        stringBuilder.append(" eventID = ").append(frequency);
+        stringBuilder.append(" frequency = ").append(frequency.getFrequency());
         stringBuilder.append(" aircraft = ").append(aircraft.getId());
         stringBuilder.append(" runway = ").append(runway).append("} ");
         return stringBuilder.toString();

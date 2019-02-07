@@ -9,7 +9,6 @@ public class Airport implements IAirport {
 
     //Abfrage ob der Weg stimmt der dem Event mitgegeben werden soll
     //Locations nötig? -> Airplane den Locations bei Event hinzufügen
-    //Alle Eigenschaften der versch. Flugzeugteile auf den derzeitigen Status anpassen
 
     private EventID theEventID=new EventID();
     private ArrayList<IGate> theGates=new ArrayList<>();
@@ -20,8 +19,8 @@ public class Airport implements IAirport {
     IAirportOperationsDatabase theAirportOperationsDatabase;
     private ITower theTower;
     private IApronControl theApronControl;
-    private String[] start;
-    private String[] land;
+    private String[] startRunway;
+    private String[] landRunway;
     public Airport(){
         //Tower and ApronControl
         theAirportOperationsDatabase =new AirportOperationsDatabase();
@@ -33,7 +32,7 @@ public class Airport implements IAirport {
             theGates.add(tempGate);
         }
         //The Aircrafts
-        for(int i=0;i<10;i++){
+        for(int i=0;i<20;i++){
             Pilot[] pilots=new Pilot[2];
             FlightAttendant[] flightAttendants=new FlightAttendant[3];
             for(int j=0;j<2;j++){
@@ -161,6 +160,7 @@ public class Airport implements IAirport {
             theTower.addAirplane(tempAircraft);
             theApronControl.addAirplane(tempAircraft);
             initializeAndSetLocations();
+            initializeWindDirection();
         }
 
 
@@ -170,22 +170,65 @@ public class Airport implements IAirport {
         int windDirection=(int)(Math.random()*3)+1;//1=WindAusOst,2=WindAusWest
         switch (windDirection){
             case 1://Wind aus Osten, also wird auf jeweils 08 gelandet und 26 gestartet
-                start=new String[]{"08L","08R"};
-                land=new String[]{"26L","26R"};
+                startRunway =new String[]{"08L","08R"};
+                landRunway =new String[]{"26R","26L"};
                 break;
             case 2://Wind aus Westen, also wird auf jeweils 26 gelandet und 08 gestartet
-                start=new String[]{"26L","26R"};
-                land=new String[]{"08L","08R"};
+                startRunway =new String[]{"26R","26L"};
+                landRunway =new String[]{"08L","08R"};
                 break;
         }
+    }
+
+    private boolean wayCorrect(String finish,ArrayList<String> theWay){
+        boolean wayIsCorrect=true;
+        String[] tempConnectedLocations= new String[1];
+
+        if(wayIsCorrect){
+            int zael=0;
+            for(String tempWayLocation:theWay){
+                if(!wayIsCorrect){//Abbruch falls der Weg während der schleife als falsch erkannt wird
+                    break;
+                }
+                for(ILocation tempLocation: theLocations){
+                    if(tempLocation.getLocationID().toString()==tempWayLocation){
+                        tempConnectedLocations=tempLocation.getConnectedLocations();
+                        wayIsCorrect=true;
+                        break;
+                    }
+                    else{
+                        wayIsCorrect=false;
+                    }
+                }
+                if(!wayIsCorrect){//Abbruch falls der Wegpunkt nicht existiert
+                    break;
+                }
+                String compare="";
+                if(theWay.size()>zael+1&&theWay.size()>1){
+                    compare=theWay.get(zael+1);
+                }
+                else{
+                    compare=finish;
+                }
+                for(String tempWayStart:tempConnectedLocations){//prüfen ob die nächste stelle mit der derzeitigen verbunden ist
+                    if(tempWayStart==compare){
+                        wayIsCorrect=true;
+                        break;
+                    }
+                    else{
+                        wayIsCorrect=false;
+                    }
+                }
+                zael++;
+            }
+        }
+        return wayIsCorrect;
     }
 
 
     private void initializeAndSetLocations(){
         String []connectedLocations;
 
-
-        //PARRALELSPUREN SIND DIREKTER WEG ZUM GATE
 
         //O-Line
         connectedLocations=new String[]{"O2","A01","N1","N2","X6","X7"};
@@ -303,7 +346,6 @@ public class Airport implements IAirport {
         theLocations.add(new Location(GateID.B04.toString(),connectedLocations));
         connectedLocations=new String[]{"M5","M6","L5","L6"};
         theLocations.add(new Location(GateID.B05.toString(),connectedLocations));
-        connectedLocations=new String[]{"M5","M6","L5","L6"};
         //Runways
         connectedLocations=new String[]{"S2"};
         theLocations.add(new Location("08L",connectedLocations));
@@ -315,65 +357,110 @@ public class Airport implements IAirport {
         theLocations.add(new Location("26L",connectedLocations));
     }
 
+    private String getCorrectRunwaySide(String runway,String startOrLand){
+        String theSide="";
+        if(runway=="R1"){
+            if(startOrLand=="start"){
+                theSide=startRunway[0];
+            }
+            else{
+                theSide=landRunway[0];
+            }
+        }
+        else{
+            if(startOrLand=="start"){
+                theSide=startRunway[1];
+            }
+            else{
+                theSide=landRunway[1];
+            }
+        }
+        return theSide;
+    }
+
     @Override
-    public void landAndStart(IAircraft aircraftToLand, IAircraft aircraftToStart, String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID){
-        theTower.eventRunwayClearedToLand(aircraftToLand,landingRunway);
-        theTower.eventHoldShort(aircraftToLand,landingRunwayConnector);
-        theApronControl.eventTaxi(aircraftToStart,startRunwayConnector,theWayToRunway,exactStartpoint);
-        theApronControl.eventHoldShort(aircraftToStart,startRunwayConnector);
-        theApronControl.eventTaxi(aircraftToLand,destinationGateID,theWayToGate,destinationGateID);
-        theApronControl.eventRunwayClearedForTakeOff(aircraftToStart,startRunway);
+    public void landAndStart(int aircraftPairNumber,String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID){
+        if(aircraftPairNumber>=0&&aircraftPairNumber<10) {
+            IAircraft aircraftToLand = theAircrafts.get(aircraftPairNumber + 10);
+            IAircraft aircraftToStart = theAircrafts.get(aircraftPairNumber);
+            landAircraft(aircraftToLand, getCorrectRunwaySide(landingRunway,"land"));
+            holdShortAircraftTower(aircraftToLand, landingRunwayConnector);
+            taxiAircraft(aircraftToStart, startRunwayConnector, theWayToRunway, exactStartpoint);
+            holdShortAircraftApronControl(aircraftToStart, startRunwayConnector);
+            taxiAircraft(aircraftToLand, destinationGateID, theWayToGate, destinationGateID);
+            startAircraft(aircraftToStart, getCorrectRunwaySide(startRunway,"start"));
+        }
     }
 
     @Override
     public void landAircraft(IAircraft aircraftToLand, String landingRunway){
-        theTower.eventRunwayClearedToLand(aircraftToLand,landingRunway);
+        if(landingRunway==landRunway[0]||landingRunway==landRunway[1]) {
+            theTower.eventRunwayClearedToLand(aircraftToLand, getCorrectRunwaySide(landingRunway,"land"));
+        }
     }
 
     @Override
     public void holdShortAircraftTower(IAircraft aircraft, String runwayConnector){
-        theTower.eventHoldShort(aircraft,runwayConnector);
+        if(checkLocaton(runwayConnector)) {
+            theTower.eventHoldShort(aircraft, runwayConnector);
+        }
     }
 
     @Override
     public void holdShortAircraftApronControl(IAircraft aircraft, String runwayConnector){
-        theApronControl.eventHoldShort(aircraft,runwayConnector);
+        if(checkLocaton(runwayConnector)) {
+            theApronControl.eventHoldShort(aircraft, runwayConnector);
+        }
     }
 
     @Override
     public void taxiAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination){
-        boolean eventAllowed=false;
-        if(runwayConnector==exactDestination){//Flugzeug in Gate hinein
-            for(IGate tempGate: theGates){
-                if(runwayConnector==tempGate.getGateID().toString()&&tempGate.getTheAircraft()==null){
-                    if(aircraft.getCurrentGate()!=null){
-                        aircraft.getCurrentGate().resetAircraft();
+        boolean wayIsCorrect=wayCorrect(exactDestination,theWayToRunway);
+        if(wayIsCorrect&&checkLocaton(runwayConnector)) {
+            boolean eventAllowed = false;
+            if (runwayConnector == exactDestination) {//Flugzeug in Gate hinein
+                for (IGate tempGate : theGates) {
+                    if (runwayConnector == tempGate.getGateID().toString() && tempGate.getTheAircraft() == null) {
+                        if (aircraft.getCurrentGate() != null) {
+                            aircraft.getCurrentGate().resetAircraft();
+                        }
+                        aircraft.setGate(tempGate);
+                        tempGate.addAircraft(aircraft);
+                        eventAllowed = true;
+                        break;
                     }
-                    aircraft.setGate(tempGate);
-                    tempGate.addAircraft(aircraft);
-                    eventAllowed=true;
-                    break;
+                }
+            } else {
+                if (aircraft.getCurrentStatus() == "InGate") {//Flugzeug aus Gate raus
+                    if (aircraft.getCurrentGate() != null) {
+                        aircraft.getCurrentGate().resetAircraft();
+                        eventAllowed = true;
+                    }
                 }
             }
-        }
-        else {
-            if (aircraft.getCurrentStatus() == "InGate") {//Flugzeug aus Gate raus
-                if (aircraft.getCurrentGate()!=null) {
-                    aircraft.getCurrentGate().resetAircraft();
-                    eventAllowed = true;
-                }
+            if (eventAllowed) {
+                theApronControl.eventTaxi(aircraft, runwayConnector, theWayToRunway, exactDestination);
             }
         }
-        if(eventAllowed) {
-            theApronControl.eventTaxi(aircraft, runwayConnector, theWayToRunway, exactDestination);
+    }
+
+    private boolean checkLocaton(String location){
+        boolean isLocation=false;
+        for(ILocation tempLocation: theLocations){
+            if(tempLocation.getLocationID()==location){
+                isLocation=true;
+                break;
+            }
         }
+        return isLocation;
     }
 
     @Override
-    public void startAircraft(IAircraft aircraft, String runway){
-        theTower.eventRunwayClearedForTakeOff(aircraft,runway);
+    public void startAircraft(IAircraft aircraft, String startingRunway){
+        if(startingRunway==startRunway[0]||startingRunway==startRunway[1]) {
+            theTower.eventRunwayClearedForTakeOff(aircraft, getCorrectRunwaySide(startingRunway,"start"));
+        }
     }
-
 
     @Override
     public void landAndStartExcample(){

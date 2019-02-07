@@ -27,7 +27,7 @@ public class EventRunwayClearedForTakeOff {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{EventRunwayClearedForTakeOff : ");
         stringBuilder.append(" eventID = ").append(eventID);
-        stringBuilder.append(" eventID = ").append(frequency);
+        stringBuilder.append(" frequency = ").append(frequency.getFrequency());
         stringBuilder.append(" aircraft = ").append(aircraft.getId());
         stringBuilder.append(" runway = ").append(runway).append("} ");
         return stringBuilder.toString();
