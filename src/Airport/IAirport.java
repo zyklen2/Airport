@@ -13,7 +13,7 @@ public interface IAirport {
 
     void holdShortAircraftTower(IAircraft aircraft, String runwayConnector);
 
-    void taxiAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination);
+    void taxiAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination,boolean toGate);
 
     void startAircraft(IAircraft aircraft, String runway);
 

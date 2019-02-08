@@ -71,7 +71,9 @@ public class Aircraft extends Subscriber implements IAircraft {
                 System.out.println(event.toString());
                 if (currentGate != null) {
                     theCurrentStatus = "Starting";
-                    currentGate=null;
+                    if(!event.getToGate()) {
+                        currentGate = null;
+                    }
                 } else {
                     theCurrentStatus = "inTaxi";
                 }

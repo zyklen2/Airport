@@ -7,9 +7,7 @@ import java.util.ArrayList;
 public interface IApronControl {
     void eventRunwayClearedToLand(IAircraft aircraft, String runway);
 
-    void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination);
-
-    void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination);
+    void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination,boolean toGate);
 
     void eventRunwayClearedForTakeOff(IAircraft aircraft, String runway);
 

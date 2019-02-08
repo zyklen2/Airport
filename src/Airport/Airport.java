@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 public class Airport implements IAirport {
 
-    //Abfrage ob der Weg stimmt der dem Event mitgegeben werden soll
-    //Locations nötig? -> Airplane den Locations bei Event hinzufügen
-
     private EventID theEventID=new EventID();
     private ArrayList<IGate> theGates=new ArrayList<>();
     private ArrayList<Pilot[]> thePilots=new ArrayList<>();
@@ -379,20 +376,6 @@ public class Airport implements IAirport {
     }
 
     @Override
-    public void landAndStart(int aircraftPairNumber,String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID){
-        if(aircraftPairNumber>=0&&aircraftPairNumber<10) {
-            IAircraft aircraftToLand = theAircrafts.get(aircraftPairNumber + 10);
-            IAircraft aircraftToStart = theAircrafts.get(aircraftPairNumber);
-            landAircraft(aircraftToLand, getCorrectRunwaySide(landingRunway,"land"));
-            holdShortAircraftTower(aircraftToLand, landingRunwayConnector);
-            taxiAircraft(aircraftToStart, startRunwayConnector, theWayToRunway, exactStartpoint);
-            holdShortAircraftApronControl(aircraftToStart, startRunwayConnector);
-            taxiAircraft(aircraftToLand, destinationGateID, theWayToGate, destinationGateID);
-            startAircraft(aircraftToStart, getCorrectRunwaySide(startRunway,"start"));
-        }
-    }
-
-    @Override
     public void landAircraft(IAircraft aircraftToLand, String landingRunway){
         if(landingRunway==landRunway[0]||landingRunway==landRunway[1]) {
             theTower.eventRunwayClearedToLand(aircraftToLand, getCorrectRunwaySide(landingRunway,"land"));
@@ -414,7 +397,7 @@ public class Airport implements IAirport {
     }
 
     @Override
-    public void taxiAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination){
+    public void taxiAircraft(IAircraft aircraft, String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination,boolean toGate){
         boolean wayIsCorrect=wayCorrect(exactDestination,theWayToRunway);
         if(wayIsCorrect&&checkLocaton(runwayConnector)) {
             boolean eventAllowed = false;
@@ -439,7 +422,12 @@ public class Airport implements IAirport {
                 }
             }
             if (eventAllowed) {
-                theApronControl.eventTaxi(aircraft, runwayConnector, theWayToRunway, exactDestination);
+                if(toGate) {
+                    theApronControl.eventTaxi(aircraft, runwayConnector, theWayToRunway, exactDestination, true);
+                }
+                else{
+                    theApronControl.eventTaxi(aircraft, runwayConnector, theWayToRunway, exactDestination,false);
+                }
             }
         }
     }
@@ -463,6 +451,22 @@ public class Airport implements IAirport {
     }
 
     @Override
+    public void landAndStart(int aircraftPairNumber,String landingRunway, String landingRunwayConnector, ArrayList<String> theWayToRunway, ArrayList<String> theWayToGate, String startRunwayConnector, String exactStartpoint, String startRunway, String destinationGateID){
+        if(aircraftPairNumber>=0&&aircraftPairNumber<10) {
+            System.out.println(theGates.get(0).getTheAircraft().getId()+","+theAircrafts.get(0).getCurrentGate().getGateID());
+            IAircraft aircraftToLand = theAircrafts.get(aircraftPairNumber + 10);
+            IAircraft aircraftToStart = theAircrafts.get(aircraftPairNumber);
+            landAircraft(aircraftToLand, getCorrectRunwaySide(landingRunway,"land"));
+            holdShortAircraftTower(aircraftToLand, landingRunwayConnector);
+            taxiAircraft(aircraftToStart, startRunwayConnector, theWayToRunway, exactStartpoint,false);
+            holdShortAircraftApronControl(aircraftToStart, startRunwayConnector);
+            taxiAircraft(aircraftToLand, destinationGateID, theWayToGate, destinationGateID,true);
+            startAircraft(aircraftToStart, getCorrectRunwaySide(startRunway,"start"));
+            System.out.println(theGates.get(0).getTheAircraft().getId()+","+theAircrafts.get(10).getCurrentGate().getGateID());
+        }
+    }
+
+    @Override
     public void landAndStartExcample(){
         IAircraft aircraftToLand=theAircrafts.get(0);
         IAircraft aircraftToStart=theAircrafts.get(1);
@@ -480,11 +484,11 @@ public class Airport implements IAirport {
         theWay.add("O4");
         theWay.add("O5");
         theWay.add("X9");
-        theApronControl.eventTaxi(aircraftToStart,startRunwayConnector,theWay,exactStartpoint);
+        theApronControl.eventTaxi(aircraftToStart,startRunwayConnector,theWay,exactStartpoint,false);
         theApronControl.eventHoldShort(aircraftToStart,startRunway);
         ArrayList<String>theWay2=new ArrayList<>();
         theWay2.add("O1");
-        theApronControl.eventTaxi(aircraftToLand,destinationGateID,theWay2);
+        theApronControl.eventTaxi(aircraftToLand,destinationGateID,theWay2,destinationGateID,true);
         theTower.eventRunwayClearedForTakeOff(aircraftToStart,startRunway);
     }
 

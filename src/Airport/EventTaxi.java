@@ -10,16 +10,18 @@ public class EventTaxi {
     private String destination;
     private ArrayList<String> wayToDestination;
     private String exactDestination;
+    private boolean toGate;
     private CommunicationFrequencys frequency;
 
     //Wenn wenn das Ziel ein Runway ist, muss der RunwayConnector und der genaue Punkt angegeben werden
-    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination, String exactDestination,CommunicationFrequencys frequency, int eventID) {
+    public EventTaxi(IAircraft aircraft, String destination, ArrayList<String> wayToDestination, String exactDestination,CommunicationFrequencys frequency, int eventID,boolean toGate) {
         this.eventID = eventID;
         this.aircraft = aircraft;
         this.destination = destination;
         this.wayToDestination = wayToDestination;
         this.exactDestination = exactDestination;
         this.frequency=frequency;
+        this.toGate=toGate;
     }
 
     //Wenn das Ziel ein Gate ist, muss nur das Gate selbst angegeben werden
@@ -62,12 +64,11 @@ public class EventTaxi {
                 stringBuilder.append(",");
             }
         }
-        if(exactDestination!=null) {
-            stringBuilder.append(" exactDestination = ").append(exactDestination).append("} ");
-        }
-        else{
-            stringBuilder.append("} ");
-        }
+        stringBuilder.append(" exactDestination = ").append(exactDestination).append("} ");
         return stringBuilder.toString();
+    }
+
+    public boolean getToGate(){
+        return toGate;
     }
 }

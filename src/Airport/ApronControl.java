@@ -24,15 +24,8 @@ public class ApronControl implements IApronControl {
     }
 
     @Override
-    public void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination) {
-        EventTaxi event=new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,exactDestination,theFrequency,eventID.getEventID());
-        eventBus.post(event);
-        theDatabase.addData(aircraft.getId(),event.toString());
-    }
-
-    @Override
-    public void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination) {
-        EventTaxi event = new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,theFrequency,eventID.getEventID());
+    public void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination,boolean toGate) {
+        EventTaxi event=new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,exactDestination,theFrequency,eventID.getEventID(),toGate);
         eventBus.post(event);
         theDatabase.addData(aircraft.getId(),event.toString());
     }
