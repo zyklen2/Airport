@@ -2,12 +2,8 @@ package Airport;
 
 import Aircraft.*;
 
-import java.util.ArrayList;
-
 public interface ITower {
     void eventRunwayClearedToLand(IAircraft aircraft, String runway);
-
-    void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination,boolean toGate);
 
     void eventRunwayClearedForTakeOff(IAircraft aircraft, String runway);
 

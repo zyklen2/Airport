@@ -29,7 +29,7 @@ public class EventRunwayClearedForTakeOff {
         stringBuilder.append(" eventID = ").append(eventID);
         stringBuilder.append(" frequency = ").append(frequency.getFrequency());
         stringBuilder.append(" aircraft = ").append(aircraft.getId());
-        stringBuilder.append(" runway = ").append(runway).append("} ");
+        stringBuilder.append(" runway = ").append(runway).append("}");
         return stringBuilder.toString();
     }
 }

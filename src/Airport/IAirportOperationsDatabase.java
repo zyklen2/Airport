@@ -10,4 +10,6 @@ public interface IAirportOperationsDatabase {
     ArrayList<String> getDataOfAirplane(String aircraftID);
 
     ArrayList<String> getAllData();
+
+    ArrayList<IDatabaseData> getAllDataInDatatype();
 }

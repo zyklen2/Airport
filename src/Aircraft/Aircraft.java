@@ -67,8 +67,8 @@ public class Aircraft extends Subscriber implements IAircraft {
     public void receive(EventTaxi event) {
         if(event.getFrequency()==CommunicationFrequencys.ApronControl) {
             if (event.getAircraft() == id) {
-                System.out.println("EventTaxi " + id);
-                System.out.println(event.toString());
+                //System.out.println("EventTaxi " + id);
+                //System.out.println(event.toString());
                 if (currentGate != null) {
                     theCurrentStatus = "Starting";
                     if(!event.getToGate()) {
@@ -90,8 +90,8 @@ public class Aircraft extends Subscriber implements IAircraft {
     public void receive(EventHoldShort event) {
         if ((theCurrentStatus == "Landed"&&event.getFrequency()==CommunicationFrequencys.Tower)||(theCurrentStatus=="Starting"&&event.getFrequency()==CommunicationFrequencys.Tower)){
             if (event.getAircraft() == id) {
-                System.out.println("EventHoldShort " + id);
-                System.out.println(event.toString());
+                //System.out.println("EventHoldShort " + id);
+                //System.out.println(event.toString());
                 if(theCurrentStatus=="Starting"){
                     theWing.get(0).start();
                     theWing.get(1).start();
@@ -114,8 +114,8 @@ public class Aircraft extends Subscriber implements IAircraft {
     public void receive(EventRunwayClearedForTakeOff event){
         if(event.getFrequency()==CommunicationFrequencys.Tower) {
             if (event.getAircraft() == id) {
-                System.out.println("EventRunwayClearedForTakeOff " + id);
-                System.out.println(event.toString());
+                //System.out.println("EventRunwayClearedForTakeOff " + id);
+                //System.out.println(event.toString());
                 theCurrentStatus = "Flying";
                 theLocation = "Flying";
                 theWing.get(0).inFlight();
@@ -133,8 +133,8 @@ public class Aircraft extends Subscriber implements IAircraft {
     public void receive(EventRunwayClearedToLand event){
         if(event.getFrequency()==CommunicationFrequencys.Tower) {
             if (event.getAircraft() == id) {
-                System.out.println("EventRunwayClearedToLand " + id);
-                System.out.println(event.toString());
+                //System.out.println("EventRunwayClearedToLand " + id);
+                //System.out.println(event.toString());
                 theCurrentStatus = "Landed";
                 theLocation = event.getRunway();
                 theWing.get(0).land();

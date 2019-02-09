@@ -64,7 +64,7 @@ public class EventTaxi {
                 stringBuilder.append(",");
             }
         }
-        stringBuilder.append(" exactDestination = ").append(exactDestination).append("} ");
+        stringBuilder.append(" exactDestination = ").append(exactDestination).append("}");
         return stringBuilder.toString();
     }
 

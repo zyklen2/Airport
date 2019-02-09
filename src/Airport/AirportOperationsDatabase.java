@@ -33,4 +33,9 @@ public class AirportOperationsDatabase implements IAirportOperationsDatabase {
         }
         return theData;
     }
+
+    @Override
+    public ArrayList<IDatabaseData> getAllDataInDatatype(){
+        return theDatabase;
+    }
 }

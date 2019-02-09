@@ -24,4 +24,8 @@ public class DatabaseData implements IDatabaseData {
     public String getDataInformation(){
         return "(#Aircraft: "+aircraftID+", Time: "+timeStemp.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))+", Message: "+eventMessage+")";
     }
+
+    public String getEventMessage(){
+        return eventMessage;
+    }
 }

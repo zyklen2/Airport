@@ -6,33 +6,19 @@ import java.util.ArrayList;
 
 public class ApronControl implements IApronControl {
     private EventBus eventBus;
-    private EventID eventID;
+    private IEventID eventID;
     private IAirportOperationsDatabase theDatabase;
     private CommunicationFrequencys theFrequency = CommunicationFrequencys.ApronControl;
 
-    public ApronControl(IAirportOperationsDatabase theDatabase,EventID theEventID) {
+    public ApronControl(IAirportOperationsDatabase theDatabase,IEventID theEventID) {
         this.eventBus = new EventBus();
         eventID=theEventID;
         this.theDatabase=theDatabase;
     }
 
     @Override
-    public void eventRunwayClearedToLand(IAircraft aircraft, String runway) {
-        EventRunwayClearedToLand event=new EventRunwayClearedToLand(aircraft,runway,theFrequency,eventID.getEventID());
-        eventBus.post(event);
-        theDatabase.addData(aircraft.getId(),event.toString());
-    }
-
-    @Override
     public void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination,boolean toGate) {
         EventTaxi event=new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,exactDestination,theFrequency,eventID.getEventID(),toGate);
-        eventBus.post(event);
-        theDatabase.addData(aircraft.getId(),event.toString());
-    }
-
-    @Override
-    public void eventRunwayClearedForTakeOff(IAircraft aircraft, String runway){
-        EventRunwayClearedForTakeOff event=new EventRunwayClearedForTakeOff(aircraft,runway,theFrequency,eventID.getEventID());
         eventBus.post(event);
         theDatabase.addData(aircraft.getId(),event.toString());
     }
@@ -45,7 +31,7 @@ public class ApronControl implements IApronControl {
     }
 
     @Override
-    public void addAirplane(Subscriber subscriber) {
+    public void addAircraft(Subscriber subscriber) {
         eventBus.register(subscriber);
     }
 

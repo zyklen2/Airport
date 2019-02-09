@@ -6,4 +6,6 @@ public interface IDatabaseData {
     AircraftID getAircraftID();
 
     String getDataInformation();
+
+    String getEventMessage();
 }

@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 public class Tower implements ITower {
     private EventBus eventBus;
-    private EventID eventID;
+    private IEventID eventID;
     private IAirportOperationsDatabase theDatabase;
     private CommunicationFrequencys theFrequency= CommunicationFrequencys.Tower;
-    public Tower(IAirportOperationsDatabase theDatabase,EventID theEventID) {
+    public Tower(IAirportOperationsDatabase theDatabase,IEventID theEventID) {
         this.eventBus = new EventBus();
         eventID=theEventID;
         this.theDatabase=theDatabase;
@@ -19,13 +19,6 @@ public class Tower implements ITower {
     @Override
     public void eventRunwayClearedToLand(IAircraft aircraft, String runway) {
         EventRunwayClearedToLand event=new EventRunwayClearedToLand(aircraft,runway,theFrequency,eventID.getEventID());
-        eventBus.post(event);
-        theDatabase.addData(aircraft.getId(),event.toString());
-    }
-
-    @Override
-    public void eventTaxi(IAircraft aircraft, String destinationRunwayConnector, ArrayList<String> wayToDestination, String exactDestination,boolean toGate) {
-        EventTaxi event=new EventTaxi(aircraft,destinationRunwayConnector,wayToDestination,exactDestination,theFrequency,eventID.getEventID(),toGate);
         eventBus.post(event);
         theDatabase.addData(aircraft.getId(),event.toString());
     }

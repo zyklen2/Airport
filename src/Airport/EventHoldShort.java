@@ -32,7 +32,7 @@ public class EventHoldShort {
         stringBuilder.append(" eventID = ").append(eventID);
         stringBuilder.append(" frequency = ").append(frequency.getFrequency());
         stringBuilder.append(" aircraft = ").append(aircraft.getId());
-        stringBuilder.append(" runwayEntrance = ").append(runwayEntrance).append("} ");
+        stringBuilder.append(" runwayEntrance = ").append(runwayEntrance).append("}");
         return stringBuilder.toString();
     }
 }
