@@ -8,4 +8,8 @@ public interface IGear {
     void setBrake();
 
     void releaseBrake();
+
+    boolean getIsDown();
+
+    boolean getIsBrakeSet();
 }

@@ -9,5 +9,5 @@ public interface ITower {
 
     void eventHoldShort(IAircraft aircraft, String runwayEntrance);
 
-    void addAirplane(Subscriber subscriber);
+    void addAircraft(Subscriber subscriber);
 }

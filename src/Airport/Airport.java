@@ -155,7 +155,7 @@ public class Airport implements IAirport {
             thePilots.add(pilots);
             theFlightAttendants.add(flightAttendants);
             //Add the Airplane as Subscriber to the Tower and ApronControl
-            theTower.addAirplane(tempAircraft);
+            theTower.addAircraft(tempAircraft);
             theApronControl.addAircraft(tempAircraft);
             initializeAndSetLocations();
             initializeWindDirection();

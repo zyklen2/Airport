@@ -3,13 +3,13 @@ package Airport;
 import Aircraft.Aircraft;
 
 public interface ILocation {
-    void addAirplane(Aircraft currentAriplane);
+    void addAircraft(Aircraft currentAircraft);
 
-    Aircraft getCurrentAriplane();
+    Aircraft getCurrentAircraft();
 
-    void resetCurrentAirplane();
+    void resetCurrentAircraft();
 
-    boolean hasAirplane();
+    boolean hasAircraft();
 
     String getLocationID();
 

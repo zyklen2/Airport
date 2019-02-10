@@ -8,30 +8,27 @@ public class Location implements ILocation {
     private Aircraft currentAircraft =null;
     private Gate theGate=null;
 
-    protected Location(){
-    }
-
     public Location(String locationID, String[] connectedLocations) {
         this.locationID = locationID;
         this.connectedLocations = connectedLocations;
     }
     @Override
-    public void addAirplane(Aircraft currentAriplane){
-        this.currentAircraft = currentAriplane;
+    public void addAircraft(Aircraft currentAircraft){
+        this.currentAircraft = currentAircraft;
     }
 
     @Override
-    public Aircraft getCurrentAriplane() {
+    public Aircraft getCurrentAircraft() {
         return currentAircraft;
     }
 
     @Override
-    public void resetCurrentAirplane(){
+    public void resetCurrentAircraft(){
         currentAircraft =null;
     }
 
     @Override
-    public boolean hasAirplane(){
+    public boolean hasAircraft(){
         if(currentAircraft !=null) {
             return true;
         }

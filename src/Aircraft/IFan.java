@@ -8,4 +8,8 @@ public interface IFan {
     void decreaseRPM(int value);
 
     void shutdown();
+
+    int getRPM();
+
+    int getId();
 }

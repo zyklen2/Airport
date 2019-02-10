@@ -35,5 +35,13 @@ public class Fan implements IFan {
         rpm=0;
     }
 
+    @Override
+    public int getRPM(){
+        return rpm;
+    }
 
+    @Override
+    public int getId(){
+        return id;
+    }
 }

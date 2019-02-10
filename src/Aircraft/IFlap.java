@@ -8,4 +8,6 @@ public interface IFlap {
     void levelTwo();
 
     void levelThree();
+
+    int getDegree();
 }

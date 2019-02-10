@@ -27,4 +27,9 @@ public class Flap implements IFlap {
     public void levelThree(){
         degree = 30;
     }
+
+    @Override
+    public int getDegree(){
+        return degree;
+    }
 }

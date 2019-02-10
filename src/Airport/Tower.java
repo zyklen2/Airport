@@ -38,7 +38,7 @@ public class Tower implements ITower {
     }
 
     @Override
-    public void addAirplane(Subscriber subscriber) {
+    public void addAircraft(Subscriber subscriber) {
         eventBus.register(subscriber);
     }
 

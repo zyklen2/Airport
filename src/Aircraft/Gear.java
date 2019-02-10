@@ -36,4 +36,14 @@ public class Gear implements IGear {
     public void releaseBrake(){
         isBrakeSet=false;
     }
+
+    @Override
+    public boolean getIsDown(){
+        return isDown;
+    }
+
+    @Override
+    public boolean getIsBrakeSet() {
+        return isBrakeSet;
+    }
 }
