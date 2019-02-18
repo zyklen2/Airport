@@ -9,16 +9,13 @@ public class Airport implements IAirport {
 
     private IEventID theEventID=new EventID();
     private ArrayList<IGate> theGates=new ArrayList<>();
-    private ArrayList<Pilot[]> thePilots=new ArrayList<>();
-    private ArrayList<FlightAttendant[]> theFlightAttendants=new ArrayList<>();
     private ArrayList<IAircraft> theAircrafts =new ArrayList<>();
     private ArrayList<ILocation> theLocations =new ArrayList<ILocation>();
-    IAirportOperationsDatabase theAirportOperationsDatabase;
+    private IAirportOperationsDatabase theAirportOperationsDatabase;
     private ITower theTower;
     private IApronControl theApronControl;
     private String[] startRunway;
     private String[] landRunway;
-    private int windDirection;
     public Airport(){
         //Tower and ApronControl
         theAirportOperationsDatabase =new AirportOperationsDatabase();
@@ -152,8 +149,6 @@ public class Airport implements IAirport {
             if(i<10){
                 theGates.get(i).addAircraft(tempAircraft);
             }
-            thePilots.add(pilots);
-            theFlightAttendants.add(flightAttendants);
             //Add the Airplane as Subscriber to the Tower and ApronControl
             theTower.addAircraft(tempAircraft);
             theApronControl.addAircraft(tempAircraft);
@@ -165,7 +160,7 @@ public class Airport implements IAirport {
     }
 
     private void initializeWindDirection(){
-        windDirection=(int)(Math.random()*3)+1;//1=WindAusOst,2=WindAusWest
+        int windDirection=(int)(Math.random()*3)+1;//1=WindAusOst,2=WindAusWest
         switch (windDirection){
             case 1://Wind aus Osten, also wird auf jeweils 08 gelandet und 26 gestartet
                 startRunway =new String[]{"08L","08R"};
@@ -178,47 +173,46 @@ public class Airport implements IAirport {
         }
     }
 
-    private boolean wayCorrect(String finish,ArrayList<String> theWay){
-        boolean wayIsCorrect=true;
-        String[] tempConnectedLocations= new String[1];
-
-        if(wayIsCorrect){
-            int zael=0;
-            for(String tempWayLocation:theWay){
-                if(!wayIsCorrect){//Abbruch falls der Weg während der schleife als falsch erkannt wird
-                    break;
-                }
-                for(ILocation tempLocation: theLocations){
-                    if(tempLocation.getLocationID().toString()==tempWayLocation){
-                        tempConnectedLocations=tempLocation.getConnectedLocations();
-                        wayIsCorrect=true;
-                        break;
-                    }
-                    else{
-                        wayIsCorrect=false;
-                    }
-                }
-                if(!wayIsCorrect){//Abbruch falls der Wegpunkt nicht existiert
-                    break;
-                }
-                String compare="";
-                if(theWay.size()>zael+1&&theWay.size()>1){
-                    compare=theWay.get(zael+1);
-                }
-                else{
-                    compare=finish;
-                }
-                for(String tempWayStart:tempConnectedLocations){//prüfen ob die nächste stelle mit der derzeitigen verbunden ist
-                    if(tempWayStart==compare){
-                        wayIsCorrect=true;
-                        break;
-                    }
-                    else{
-                        wayIsCorrect=false;
-                    }
-                }
-                zael++;
+    private boolean wayCorrect(String finish,ArrayList<String> theWay) {
+        boolean wayIsCorrect = true;
+        String[] tempConnectedLocations = new String[1];
+        if (theWay.get(0).equals(finish) && theWay.size() == 1) {//Für Fälle wie B05,A05,A01 und B01 die direkt am RunwayConnector liegen
+            //und somit keinen Weg zurücklegen müssen wird einfach das Ziel in den
+            //Weg geschrieben
+            return true;
+        }
+        int zael = 0;
+        for (String tempWayLocation : theWay) {
+            if (!wayIsCorrect) {//Abbruch falls der Weg während der schleife als falsch erkannt wird
+                break;
             }
+            for (ILocation tempLocation : theLocations) {
+                if (tempLocation.getLocationID().equals(tempWayLocation)) {
+                    tempConnectedLocations = tempLocation.getConnectedLocations();
+                    wayIsCorrect = true;
+                    break;
+                } else {
+                    wayIsCorrect = false;
+                }
+            }
+            if (!wayIsCorrect) {//Abbruch falls der Wegpunkt nicht existiert
+                break;
+            }
+            String compare;
+            if (theWay.size() > zael + 1 && theWay.size() > 1) {
+                compare = theWay.get(zael + 1);
+            } else {
+                compare = finish;
+            }
+            for (String tempWayStart : tempConnectedLocations) {//prüfen ob die nächste stelle mit der derzeitigen verbunden ist
+                if (tempWayStart.equals(compare)) {
+                    wayIsCorrect = true;
+                    break;
+                } else {
+                    wayIsCorrect = false;
+                }
+            }
+            zael++;
         }
         return wayIsCorrect;
     }
@@ -244,7 +238,7 @@ public class Airport implements IAirport {
         //N-Line
         connectedLocations=new String[]{"N2","A01","O1","O2","X5","X8"};
         theLocations.add(new Location("N1",connectedLocations));
-        connectedLocations=new String[]{"N1","N3","A01","O1","O2","O3","X2","X4"};
+        connectedLocations=new String[]{"N1","N3","A01","A02","O1","O2","O3","X2","X4"};
         theLocations.add(new Location("N2",connectedLocations));
         connectedLocations=new String[]{"N2","N4","A02","A03","O2","O3","O4"};
         theLocations.add(new Location("N3",connectedLocations));
@@ -313,7 +307,6 @@ public class Airport implements IAirport {
         theLocations.add(new Location("X15",connectedLocations));
         connectedLocations=new String[]{"M5","N6"};
         theLocations.add(new Location("X16",connectedLocations));
-        connectedLocations=new String[]{"O1","N1"};
         //Runway Connectors
         connectedLocations=new String[]{"O1","N1"};
         theLocations.add(new Location("S1",connectedLocations));
@@ -330,9 +323,9 @@ public class Airport implements IAirport {
         theLocations.add(new Location(GateID.A02.toString(),connectedLocations));
         connectedLocations=new String[]{"N3","N4","O3","O4"};
         theLocations.add(new Location(GateID.A03.toString(),connectedLocations));
-        connectedLocations=new String[]{"N4","N5","N4","N5"};
+        connectedLocations=new String[]{"N4","N5","O4","O5"};
         theLocations.add(new Location(GateID.A04.toString(),connectedLocations));
-        connectedLocations=new String[]{"N5","N6","N5","N6"};
+        connectedLocations=new String[]{"N5","N6","O5","O6"};
         theLocations.add(new Location(GateID.A05.toString(),connectedLocations));
         connectedLocations=new String[]{"M1","M2","L1","L2"};
         theLocations.add(new Location(GateID.B01.toString(),connectedLocations));
@@ -356,8 +349,11 @@ public class Airport implements IAirport {
     }
 
     private void landAircraft(IAircraft aircraftToLand, String landingRunway){
-        if(landingRunway==landRunway[0]||landingRunway==landRunway[1]) {
+        if(landingRunway.equals(landRunway[0])||landingRunway.equals(landRunway[1])) {
             theTower.eventRunwayClearedToLand(aircraftToLand, landingRunway);
+        }
+        else{
+            theAirportOperationsDatabase.addData(aircraftToLand.getId(),"Error at landAircraft: eventID: "+theEventID.getEventID()+" "+landingRunway);
         }
     }
 
@@ -365,11 +361,17 @@ public class Airport implements IAirport {
         if(checkLocaton(runwayConnector)) {
             theTower.eventHoldShort(aircraft, runwayConnector);
         }
+        else{
+            theAirportOperationsDatabase.addData(aircraft.getId(),"Error at holdShortTower: eventID: "+theEventID.getEventID()+" "+runwayConnector);
+        }
     }
 
     private void holdShortAircraftApronControl(IAircraft aircraft, String runwayConnector){
         if(checkLocaton(runwayConnector)) {
             theApronControl.eventHoldShort(aircraft, runwayConnector);
+        }
+        else{
+            theAirportOperationsDatabase.addData(aircraft.getId(),"Error at holdShortApronControl: eventID: "+theEventID.getEventID()+" "+runwayConnector);
         }
     }
 
@@ -377,9 +379,9 @@ public class Airport implements IAirport {
         boolean wayIsCorrect=wayCorrect(exactDestination,theWayToRunway);
         if(wayIsCorrect&&checkLocaton(runwayConnector)) {
             boolean eventAllowed = false;
-            if (runwayConnector == exactDestination) {//Flugzeug in Gate hinein
+            if (runwayConnector.equals(exactDestination)) {//Flugzeug in Gate hinein
                 for (IGate tempGate : theGates) {
-                    if (runwayConnector == tempGate.getGateID().toString() && tempGate.getTheAircraft() == null) {
+                    if (runwayConnector.equals(tempGate.getGateID().toString()) && tempGate.getTheAircraft() == null) {
                         if (aircraft.getCurrentGate() != null) {
                             aircraft.getCurrentGate().resetAircraft();
                         }
@@ -390,7 +392,7 @@ public class Airport implements IAirport {
                     }
                 }
             } else {
-                if (aircraft.getCurrentStatus() == "InGate") {//Flugzeug aus Gate raus
+                if (aircraft.getCurrentStatus().equals("InGate")) {//Flugzeug aus Gate raus
                     if (aircraft.getCurrentGate() != null) {
                         aircraft.getCurrentGate().resetAircraft();
                         eventAllowed = true;
@@ -405,13 +407,35 @@ public class Airport implements IAirport {
                     theApronControl.eventTaxi(aircraft, runwayConnector, theWayToRunway, exactDestination,false);
                 }
             }
+            else{
+                theAirportOperationsDatabase.addData(aircraft.getId(),createTaxiErrorMessage(runwayConnector,theWayToRunway,exactDestination));
+            }
+        }
+        else{
+            theAirportOperationsDatabase.addData(aircraft.getId(),createTaxiErrorMessage(runwayConnector,theWayToRunway,exactDestination));
         }
     }
-
+    private String createTaxiErrorMessage(String runwayConnector, ArrayList<String> theWayToRunway, String exactDestination){
+        StringBuilder builder = new StringBuilder();
+        builder.append("Error at Taxi: eventID: ");
+        builder.append(theEventID.getEventID());
+        builder.append(" connector: ");
+        builder.append(runwayConnector);
+        builder.append(" theWay: ");
+        for(String waypoint: theWayToRunway){
+            builder.append(waypoint);
+            if(!waypoint.equals(theWayToRunway.get(theWayToRunway.size()-1))){
+                builder.append(",");
+            }
+        }
+        builder.append(" exactDestination: ");
+        builder.append(exactDestination);
+        return builder.toString();
+    }
     private boolean checkLocaton(String location){
         boolean isLocation=false;
         for(ILocation tempLocation: theLocations){
-            if(tempLocation.getLocationID()==location){
+            if(tempLocation.getLocationID().equals(location)){
                 isLocation=true;
                 break;
             }
@@ -420,8 +444,11 @@ public class Airport implements IAirport {
     }
 
     private void startAircraft(IAircraft aircraft, String startingRunway){
-        if(startingRunway==startRunway[0]||startingRunway==startRunway[1]) {
+        if(startingRunway.equals(startRunway[0])||startingRunway.equals(startRunway[1])) {
             theTower.eventRunwayClearedForTakeOff(aircraft, startingRunway);
+        }
+        else{
+            theAirportOperationsDatabase.addData(aircraft.getId(),"Error at startAircraft: eventID: "+theEventID.getEventID()+" "+startingRunway);
         }
     }
 
